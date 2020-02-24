@@ -1,0 +1,2 @@
+#define SGT_VISUALIZATION
+#define SGT_TESTING
