@@ -1,3 +1,9 @@
+/*****************************************************/
+//Organization: Stuba Green Team
+//Authors: Juraj Krasňanský
+/*****************************************************/
+
+
 #include "../include/PoseEstimate.h"
 
 PoseEstimate::PoseEstimate()

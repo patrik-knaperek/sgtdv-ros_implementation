@@ -1,3 +1,9 @@
+/*****************************************************/
+//Organization: Stuba Green Team
+//Authors: Tibor Kominko, Juraj Krasňanský
+/*****************************************************/
+
+
 #include "../include/JetsonCanInterface.h"
 
 JetsonCanInterface::JetsonCanInterface()
