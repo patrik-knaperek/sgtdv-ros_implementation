@@ -35,4 +35,5 @@ RUN cd /usr/src/ROS_implementation/
 #RUN cp /usr/src/ROS_implementation/yolov3-tiny_3l.cfg /usr/src/ROS_implementation/devel/lib/camera_cone_detection/yolov3-tiny.cfg
 #RUN cp /usr/src/ROS_implementation/druha_jazda.svo /usr/src/ROS_implementation/devel/lib/camera_cone_detection/druha_jazda.svo
 
-### TRY PCL
+
+
