@@ -81,6 +81,3 @@ RUN cd /usr/src/ROS_implementation/
 #COPY vnc_entrypoint.sh /vnc_entrypoint.sh
 #RUN chmod +x vnc_entrypoint.sh
 #ENTRYPOINT ["/vnc_entrypoint.sh"]
-
-
-# docker build -f Dockerfile-gl -t sgt_ros_implementation_gl . && docker run -p 5900:5901 -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --privileged -it --network host --gpus all sgt_ros_implementation_gl
