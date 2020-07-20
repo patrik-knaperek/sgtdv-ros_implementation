@@ -45,7 +45,7 @@ FROM BUILD_ROS AS COMPILE_ROS_IMPLEMENTATION
 WORKDIR /usr/src/ROS_implementation
 
 # update and upgrade ubuntu and install vim editor and git
-RUN apt-get update -y && apt-get upgrade -y && apt-get install vim -y && apt-get install git -y
+RUN apt-get update -y && apt-get upgrade -y && apt-get install vim -y && apt-get install git -y && apt-get install -qqy x11-apps -y
 
 # Make darknet dir
 RUN mkdir darknet

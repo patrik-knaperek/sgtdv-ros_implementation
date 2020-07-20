@@ -29,6 +29,7 @@ sudo systemctl restart docker
 
 Spustit cez  prikaz (treba zmenit cesu k suborom v ```-v``` casti)
 ```sh
+xhost +
 docker build -f Dockerfile-gl -t sgt_ros_implementation_gl . && docker run -p 5900:5901 -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v <your path to ros_implementation>:/usr/src/ROS_implementation/ --privileged -it --network host --gpus all sgt_ros_implementation_gl
 ```
 
