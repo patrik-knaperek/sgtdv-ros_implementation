@@ -1,0 +1,83 @@
+# https://github.com/stereolabs/zed-docker/tree/master/3.X/ubuntu
+#Using gl-devel to support OPENGL Images(support windows)
+FROM stereolabs/zed:3.2-gl-devel-cuda10.0-ubuntu18.04 AS BUILD_ROS
+#START OF INSTALL ROS
+ENV LOGNAME root
+ENV ROS_DISTRO melodic
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
+# Setup ROS
+RUN apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata && \
+    sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' && \
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 && \
+    apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install ros-$ROS_DISTRO-ros-base python-rosinstall python-rosdep python-rosinstall-generator python-wstool build-essential nano \
+        cmake usbutils git -y --allow-unauthenticated && \
+    rm -rf /var/lib/apt/lists/*
+
+# setup ros env
+ENV ROS_WS /opt/ros_ws
+
+RUN rosdep init && \
+  rosdep update --rosdistro $ROS_DISTRO && \
+  mkdir -p $ROS_WS/src
+
+WORKDIR $ROS_WS
+
+RUN cd src ; git clone https://github.com/stereolabs/zed-ros-wrapper.git && \
+    cd .. ; apt-get update -y && \
+    . /opt/ros/$ROS_DISTRO/setup.sh && \
+    rosdep install --from-paths $ROS_WS/src --ignore-src -r -y && \
+    rm -rf /var/lib/apt/lists/* && \
+    catkin_make -DCMAKE_BUILD_TYPE=Release -DCMAKE_LIBRARY_PATH=/usr/local/cuda/lib64/stubs -DCUDA_CUDART_LIBRARY=/usr/local/cuda/lib64/stubs -DCMAKE_CXX_FLAGS="-Wl,--allow-shlib-undefined"
+
+# setup entrypoint
+COPY ./ros_entrypoint.sh /
+RUN chmod +x /ros_entrypoint.sh
+ENTRYPOINT ["/ros_entrypoint.sh"]
+CMD ["bash"]
+#END OF INSTALL ROS
+FROM BUILD_ROS AS COMPILE_ROS_IMPLEMENTATION
+
+# set work directory
+WORKDIR /usr/src/ROS_implementation
+
+# update and upgrade ubuntu and install vim editor and git
+RUN apt-get update -y && apt-get upgrade -y && apt-get install vim -y && apt-get install git -y && apt-get install -qqy x11-apps -y
+
+# Make darknet dir
+RUN mkdir darknet
+# download darkent from github
+RUN git clone https://github.com/AlexeyAB/darknet.git /usr/src/ROS_implementation/darknet
+
+# Build lib
+# RUN cd /usr/src/ROS_implementation/darknet && sed -i 's/GPU=0/GPU=1/g' Makefile && sed -i 's/CUDNN=0/CUDNN=1/g' Makefile && sed -i 's/CUDNN_HALF=0/CUDNN_HALF=1/g' Makefile && sed -i 's/OPENCV=0/OPENCV=1/g' Makefile && sed -i 's/ZED_CAMERA=0/ZED_CAMERA=1/g' Makefile && sed -i 's/LIBSO=0/LIBSO=1/g' Makefile && make
+
+# Build lib without ZED SDK and without CUDNN_HALF
+RUN cd /usr/src/ROS_implementation/darknet && sed -i 's/GPU=0/GPU=1/g' Makefile && sed -i 's/CUDNN=0/CUDNN=1/g' Makefile && sed -i 's/OPENCV=0/OPENCV=1/g' Makefile && sed -i 's/LIBSO=0/LIBSO=1/g' Makefile && make
+
+RUN cd /usr/src/ROS_implementation/
+
+# copy project
+COPY . .
+
+#edit dependencies as cuda and darknet
+RUN sed -i 's|  /usr/local/cuda-10.0/include # include cuda 10.0|  /usr/local/cuda-10.0/include # include cuda 10.0|g' /usr/src/ROS_implementation/src/camera_cone_detection/CMakeLists.txt
+RUN sed -i 's|    /usr/src/ROS_implementation/darknet/libdarknet.so #treba zmenit na aktualnu cestu|    /usr/src/ROS_implementation/darknet/libdarknet.so #treba zmenit na aktualnu cestu|g' /usr/src/ROS_implementation/src/camera_cone_detection/CMakeLists.txt
+
+RUN cd /usr/src/ROS_implementation/
+#CMD ["catkin_make", "-j1", "-l1"]
+
+#RUN cp /usr/src/ROS_implementation/yolov3-tiny_3l.weights /usr/src/ROS_implementation/devel/lib/camera_cone_detection/yolov3-tiny.weights
+#RUN cp /usr/src/ROS_implementation/yolov3-tiny_3l.cfg /usr/src/ROS_implementation/devel/lib/camera_cone_detection/yolov3-tiny.cfg
+#RUN cp /usr/src/ROS_implementation/druha_jazda.svo /usr/src/ROS_implementation/devel/lib/camera_cone_detection/druha_jazda.svo
+
+### install VNC port 5900
+#RUN apt-get install -y x11vnc xvfb
+#RUN mkdir ~/.vnc
+#RUN x11vnc -storepasswd 1234 ~/.vnc/passwd
+#COPY vnc_entrypoint.sh /vnc_entrypoint.sh
+#RUN chmod +x vnc_entrypoint.sh
+#ENTRYPOINT ["/vnc_entrypoint.sh"]
