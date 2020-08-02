@@ -9,14 +9,17 @@ cache:
     - build/
     - devel/
 
-before_script:
-  - apt update >/dev/null && apt install -y git >/dev/null
-  - git clone https://gitlab.com/VictorLamoine/ros_gitlab_ci.git >/dev/null
-  - source ros_gitlab_ci/gitlab-ci.bash >/dev/null
-  - apt-get install -y libopencv-dev
+.build_before_script: &build_before_script
+  before_script:
+    - apt update >/dev/null && apt install -y git >/dev/null
+    - git clone https://gitlab.com/VictorLamoine/ros_gitlab_ci.git >/dev/null
+    - source ros_gitlab_ci/gitlab-ci.bash >/dev/null
+    - apt-get install -y libopencv-dev
 
 # catkin build camera_cone_detection:
 #  stage: build
+#  <<: *build_before_script
+#  allow_failure: true
 #  script:
 #    - catkin build sgtdv_msgs --summarize --no-status --force-color --catkin-make-args run_tests
 #    - catkin build camera_cone_detection --summarize --no-status --force-color --catkin-make-args run_tests
@@ -24,6 +27,7 @@ before_script:
 
 catkin build lidar_cone_detection:
   stage: build
+  <<: *build_before_script
   script:
     - catkin build sgtdv_msgs --summarize --no-status --force-color --catkin-make-args run_tests
     - catkin build lidar_cone_detection --summarize --no-status --force-color --catkin-make-args run_tests
@@ -31,6 +35,7 @@ catkin build lidar_cone_detection:
 
 catkin build fusion:
   stage: build
+  <<: *build_before_script
   script:
     - catkin build sgtdv_msgs --summarize --no-status --force-color --catkin-make-args run_tests
     - catkin build fusion --summarize --no-status --force-color --catkin-make-args run_tests
@@ -38,6 +43,7 @@ catkin build fusion:
 
 catkin build jetson_can_interface:
   stage: build
+  <<: *build_before_script
   script:
     - catkin build sgtdv_msgs --summarize --no-status --force-color --catkin-make-args run_tests
     - catkin build jetson_can_interface --summarize --no-status --force-color --catkin-make-args run_tests
@@ -45,6 +51,7 @@ catkin build jetson_can_interface:
 
 catkin build path_planning:
   stage: build
+  <<: *build_before_script
   script:
     - catkin build sgtdv_msgs --summarize --no-status --force-color --catkin-make-args run_tests
     - catkin build path_planning --summarize --no-status --force-color --catkin-make-args run_tests
@@ -52,6 +59,7 @@ catkin build path_planning:
 
 catkin build path_tracking:
   stage: build
+  <<: *build_before_script
   script:
     - catkin build sgtdv_msgs --summarize --no-status --force-color --catkin-make-args run_tests
     - catkin build path_tracking --summarize --no-status --force-color --catkin-make-args run_tests
@@ -59,6 +67,7 @@ catkin build path_tracking:
 
 catkin build pose_estimate:
   stage: build
+  <<: *build_before_script
   script:
     - catkin build sgtdv_msgs --summarize --no-status --force-color --catkin-make-args run_tests
     - catkin build pose_estimate --summarize --no-status --force-color --catkin-make-args run_tests
@@ -66,6 +75,7 @@ catkin build pose_estimate:
 
 catkin build slam:
   stage: build
+  <<: *build_before_script
   script:
     - catkin build sgtdv_msgs --summarize --no-status --force-color --catkin-make-args run_tests
     - catkin build slam --summarize --no-status --force-color --catkin-make-args run_tests
@@ -73,6 +83,7 @@ catkin build slam:
 
 # catkin build all:
 #  stage: build
+#  <<: *build_before_script
 #  script:
 #    - catkin build --summarize --no-status --force-color
 #   artifacts:
@@ -82,6 +93,7 @@ catkin build slam:
 
 # catkin test all:
 #  stage: test
+#  <<: *build_before_script
 #  script:
 #   - catkin run_tests --no-status --force-color
 #   - catkin_test_results # Check if one of the tests failed!
@@ -89,3 +101,23 @@ catkin build slam:
 #     paths:
 #       - 'catkin_workspace/build'
 #       - 'catkin_workspace/devel'
+
+code_quality:
+  image: docker:stable
+  stage: build
+  variables:
+    DOCKER_DRIVER: overlay2
+    SP_VERSION: 0.85.6
+  allow_failure: true
+  services:
+    - docker:stable-dind
+  script:
+    - docker run
+      --env SOURCE_CODE="$PWD"
+      --volume "$PWD":/code
+      --volume /var/run/docker.sock:/var/run/docker.sock
+      "registry.gitlab.com/gitlab-org/ci-cd/codequality:$SP_VERSION" /code
+  artifacts:
+    paths: [gl-code-quality-report.json]
+    reports:
+      codequality: gl-code-quality-report.json
