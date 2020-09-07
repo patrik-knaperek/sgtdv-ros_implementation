@@ -64,7 +64,6 @@ RUN cd /usr/src/ROS_implementation/
 COPY . .
 
 #edit dependencies as cuda and darknet
-RUN sed -i 's|  /usr/local/cuda-10.0/include # include cuda 10.0|  /usr/local/cuda-10.0/include # include cuda 10.0|g' /usr/src/ROS_implementation/src/camera_cone_detection/CMakeLists.txt
 RUN sed -i 's|    /usr/src/ROS_implementation/darknet/libdarknet.so #treba zmenit na aktualnu cestu|    /usr/src/ROS_implementation/darknet/libdarknet.so #treba zmenit na aktualnu cestu|g' /usr/src/ROS_implementation/src/camera_cone_detection/CMakeLists.txt
 
 RUN cd /usr/src/ROS_implementation/
