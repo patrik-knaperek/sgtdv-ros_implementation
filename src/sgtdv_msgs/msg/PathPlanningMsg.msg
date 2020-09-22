@@ -1,2 +1,2 @@
 CarState carState
-ColoredConeArr coneMap
+ConeArr coneMap
