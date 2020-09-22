@@ -127,12 +127,14 @@ catkin build slam:
 docs-doxygen:
   image: alpine
   stage: docs
-
+  allow_failure: true
   script:
     - apk update && apk add doxygen
     - apk add ttf-freefont graphviz
     - doxygen doxygen/Doxyfile
+    - mkdir -p public
     - mv documentation/html/* public/
+
   artifacts:
     paths:
       - public
