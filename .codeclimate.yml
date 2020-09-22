@@ -1,0 +1,10 @@
+version: "2"
+plugins:
+  fixme:
+    enabled: true
+  cppcheck:
+    enabled: true
+  grep:
+    enabled: true
+  gnu-complexity:
+    enabled: true
