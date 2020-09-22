@@ -2,7 +2,8 @@ image: ros:melodic-ros-core
 
 stages:
   - build
-  - test
+#  - test
+  - docs
 
 cache:
   paths:
@@ -102,22 +103,40 @@ catkin build slam:
 #       - 'catkin_workspace/build'
 #       - 'catkin_workspace/devel'
 
-code_quality:
-  image: docker:stable
-  stage: build
-  variables:
-    DOCKER_DRIVER: overlay2
-    SP_VERSION: 0.85.6
+#code_quality:
+#  image: docker:stable
+#  stage: build
+#  variables:
+#    DOCKER_DRIVER: overlay2
+#    SP_VERSION: 0.85.6
+#  allow_failure: true
+#  services:
+#    - docker:stable-dind
+#  script:
+#    - docker run
+#      --env SOURCE_CODE="$PWD"
+#      --volume "$PWD":/code
+#      --volume /var/run/docker.sock:/var/run/docker.sock
+#      "registry.gitlab.com/gitlab-org/ci-cd/codequality:$SP_VERSION" /code
+#  artifacts:
+#    paths: [gl-code-quality-report.json]
+#    reports:
+#      codequality: gl-code-quality-report.json
+
+
+docs-doxygen:
+  image: alpine
+  stage: docs
   allow_failure: true
-  services:
-    - docker:stable-dind
   script:
-    - docker run
-      --env SOURCE_CODE="$PWD"
-      --volume "$PWD":/code
-      --volume /var/run/docker.sock:/var/run/docker.sock
-      "registry.gitlab.com/gitlab-org/ci-cd/codequality:$SP_VERSION" /code
+    - apk update && apk add doxygen
+    - apk add ttf-freefont graphviz
+    - doxygen doxygen/Doxyfile
+    - mkdir -p public
+    - mv documentation/html/* public/
+
   artifacts:
-    paths: [gl-code-quality-report.json]
-    reports:
-      codequality: gl-code-quality-report.json
+    paths:
+      - public
+  only:
+    - master
