@@ -132,7 +132,7 @@ docs-doxygen:
     - apk update && apk add doxygen
     - apk add ttf-freefont graphviz
     - doxygen doxygen/Doxyfile
-    - mv documentation/html/ public/
+    - mv documentation/html/* public/
   artifacts:
     paths:
       - public
