@@ -1,4 +1,3 @@
-
 # IDEs and editors
 /.idea
 .project
@@ -18,3 +17,5 @@
 devel
 build
 darknet
+druha_jazda.svo
+yolov3-tiny.weights
