@@ -3,6 +3,7 @@
 //Authors: Juraj Krasňanský
 /*****************************************************/
 
+#pragma once
 
 #include <sgtdv_msgs/Control.h>
 
