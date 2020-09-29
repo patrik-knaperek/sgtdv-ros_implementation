@@ -17,7 +17,13 @@ int main(int argc, char** argv)
 
     ros::Subscriber pathTrackingSub = handle.subscribe("pathtracking_commands", 1, &JetsonCanInterface::Do, &jetsonCanInterface);
 
-    ros::spin();
+    //ros::spin();
+    sgtdv_msgs::Control control;
+
+    while(ros::ok())
+    {
+       jetsonCanInterface.Do(control);
+    }
 
     return 0;
 }

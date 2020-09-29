@@ -18,7 +18,11 @@ find_package(catkin REQUIRED COMPONENTS
 find_package(OpenCV REQUIRED)
 
 catkin_package(
-  CATKIN_DEPENDS sgtdv_msgs
+    CATKIN_DEPENDS roscpp
+    CATKIN_DEPENDS std_msgs
+    CATKIN_DEPENDS sgtdv_msgs
+    CATKIN_DEPENDS visualization_msgs
+    CATKIN_DEPENDS sensor_msgs
 )
 
 include_directories(
