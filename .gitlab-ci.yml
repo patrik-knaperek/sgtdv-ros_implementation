@@ -14,6 +14,7 @@ cache:
   before_script:
     - apt update >/dev/null && apt install -y git >/dev/null
     - git clone https://gitlab.com/VictorLamoine/ros_gitlab_ci.git >/dev/null
+    - git rm -r --cached . --ignore-unmatch
     - source ros_gitlab_ci/gitlab-ci.bash >/dev/null
     - apt-get install -y libopencv-dev
 
