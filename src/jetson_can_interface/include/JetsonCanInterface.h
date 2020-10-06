@@ -3,16 +3,12 @@
 //Authors: Juraj Krasňanský
 /*****************************************************/
 
-constexpr const char *NETWORKING_INTERFACE_NAME = "can0"; //"can1"
-constexpr int INVERTOR_BYTES_TO_SEND = 20;//TODO
-constexpr int INVERTOR_MSG_ID = 0x230;
-constexpr int DLCSHIT = 0;//TODO
-
 #include <sgtdv_msgs/Control.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <cstdint>
 
 #include <net/if.h>
 #include <sys/types.h>
@@ -22,12 +18,17 @@ constexpr int DLCSHIT = 0;//TODO
 #include <linux/can.h>
 #include <linux/can/raw.h>
 
+constexpr const char *NETWORKING_INTERFACE_NAME = "can0";
+constexpr int CAN_BYTES_TO_SEND = sizeof(can_frame);
+constexpr int INVERTOR_MSG_ID = 0x20;
 
-struct CAN_MSG
+
+struct SPEED_CONTROL
 {
-    
+    uint16_t status_flag;
+    uint16_t required_RPM;
+    uint32_t timestamp;
 };
-
 
 class JetsonCanInterface
 {

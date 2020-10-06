@@ -28,40 +28,38 @@ JetsonCanInterface::~JetsonCanInterface()
 
 void JetsonCanInterface::Do(const sgtdv_msgs::Control::ConstPtr &msg)
 {
-    m_canFrame.data[0] = 0x11;
-    m_canFrame.data[1] = 0x22;
-    //TODO send actual values for msg
-    //msg->speed
-    //msg->steeringAngle
+    SPEED_CONTROL control;
+    control.status_flag = 0;
+    control.required_RPM = 20;
+    control.timestamp = 0;
+
+    uint64_t *temp = reinterpret_cast<uint64_t*>(&(m_canFrame.data));
+    (*temp) = *(reinterpret_cast<uint64_t*>(&control));
+
     int bytesWritten = 0;
     char * data = reinterpret_cast<char*>(&m_canFrame);
 
-    while(bytesWritten != INVERTOR_BYTES_TO_SEND)
+    while(bytesWritten != CAN_BYTES_TO_SEND)
     {
-        bytesWritten += write(m_socket, data + bytesWritten - 1, INVERTOR_BYTES_TO_SEND - bytesWritten);
+        bytesWritten += write(m_socket, data + bytesWritten - 1, CAN_BYTES_TO_SEND - bytesWritten);
     }  
 }
 
 void JetsonCanInterface::Do(const sgtdv_msgs::Control &msg)
 {
-    m_canFrame.data[0] = 0xFF;
-    m_canFrame.data[1] = 0xFF;
-    m_canFrame.data[2] = 0xFF;
-    m_canFrame.data[3] = 0xFF;
-    m_canFrame.data[4] = 0xFF;
-    m_canFrame.data[5] = 0xFF;
-    m_canFrame.data[6] = 0xFF;
-    m_canFrame.data[7] = 0xFF;
-    //TODO send actual values for msg
-    //msg->speed
-    //msg->steeringAngle
+   SPEED_CONTROL control;
+    control.status_flag = 0;
+    control.required_RPM = msg.speed;
+    control.timestamp = 0;
+
+    uint64_t *temp = reinterpret_cast<uint64_t*>(&(m_canFrame.data));
+    (*temp) = *(reinterpret_cast<uint64_t*>(&control));
+
     int bytesWritten = 0;
     char * data = reinterpret_cast<char*>(&m_canFrame);
 
-    write(m_socket, &m_canFrame, sizeof(m_canFrame));
-
-    //while(bytesWritten != INVERTOR_BYTES_TO_SEND)
-    //{
-    //    bytesWritten += write(m_socket, data + bytesWritten - 1, INVERTOR_BYTES_TO_SEND - bytesWritten);
-    //}  
+    while(bytesWritten != CAN_BYTES_TO_SEND)
+    {
+        bytesWritten += write(m_socket, data + bytesWritten - 1, CAN_BYTES_TO_SEND - bytesWritten);
+    }  
 }
