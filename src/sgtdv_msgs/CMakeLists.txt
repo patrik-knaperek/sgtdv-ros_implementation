@@ -60,6 +60,7 @@ add_message_files(
   FusionMsg.msg
   ColoredConeArr.msg
   SLAMMsg.msg
+  DebugState.msg
 )
 
 ## Generate services in the 'srv' folder

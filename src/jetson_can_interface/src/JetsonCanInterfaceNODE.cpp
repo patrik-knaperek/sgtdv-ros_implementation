@@ -12,7 +12,7 @@ int main(int argc, char** argv)
 {
     JetsonCanInterface jetsonCanInterface;
 
-    ros::init(argc, argv, "jetson_can_interface");
+    ros::init(argc, argv, "jetsonCanInterface");
     ros::NodeHandle handle;
 
     ros::Subscriber pathTrackingSub = handle.subscribe("pathtracking_commands", 1, &JetsonCanInterface::Do, &jetsonCanInterface);
