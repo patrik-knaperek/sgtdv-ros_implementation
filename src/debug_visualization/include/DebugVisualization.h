@@ -9,7 +9,16 @@
 
 #include <ros/ros.h>
 #include <sgtdv_msgs/DebugState.h>
+#include <geometry_msgs/Point.h>
 #include <visualization_msgs/Marker.h>
+
+constexpr int32_t NUM_OF_CONNECTION_LINES = 6;
+constexpr int32_t NUM_OF_NODES = 7;
+constexpr const char* FRAME_ID = "/sgt_frame";
+constexpr const char* NODE_RECT_NAMESPACE = "nodeGeometry";
+constexpr const char* LINE_CONNECTION_NAMESPACE = "lineConnections";
+constexpr const float X_OFFSET = -2.f;
+constexpr const float Y_OFFSET = 2.f;
 
 class DebugVisualization
 {
@@ -26,24 +35,23 @@ enum NODE_TYPE
 
 struct FPoint2D
 {
-  FPoint2D(float X, float Y) {x = X; y = Y;}
-  float x;
-  float y;
+    FPoint2D() { x = 0.f; y = 0.f; }
+    FPoint2D(float X, float Y) {x = X; y = Y;}
+    geometry_msgs::Point GetPoint() const;
+    float x;
+    float y;
 };
 
-struct NodeVisualization
+struct NodeGeometry
 {
-  NodeVisualization(const FPoint2D &position, float width, float height);
+  NodeGeometry(const FPoint2D &position, float scaleX, float scaleY);
   FPoint2D position;
-  float width;
-  float height;
-  FPoint2D inConnection;
-  FPoint2D outConnection;
+  float scaleX;
+  float scaleY;
 };
-
 
 public:
-
+    DebugVisualization();
     void InitRViz();
     void SetPublisher(ros::Publisher publisher) { m_publisher = publisher; }
     void DoCamera(const sgtdv_msgs::DebugState::ConstPtr &msg);
@@ -53,22 +61,15 @@ public:
     void DoPathPlanning(const sgtdv_msgs::DebugState::ConstPtr &msg);
     void DoPathTracking(const sgtdv_msgs::DebugState::ConstPtr &msg);
     void DoJetsonCANInterface(const sgtdv_msgs::DebugState::ConstPtr &msg);
+    void PublishAllNodes();
 
 private:
     ros::Publisher m_publisher;
+    visualization_msgs::Marker m_markers[NUM_OF_NODES];
 
-    void InitCamera();
-    void InitLidar();
-    void InitFusion();
-    void InitSLAM();
-    void InitPathPlanning();
-    void InitPathTracking();
-    void InitJetsonCANInterface();
+    void InitConnectionLines();    
+    void InitNodes();
 
-    // static NodeVisualization m_NODE_GEOMETRY[7] = 
-    // {
-    //   NodeVisualization(FPoint2D(0.f, 0.f), 10.f, 10.f),
-    //   NodeVisualization(FPo)
-    // };
+    static const NodeGeometry m_NODE_GEOMETRY[NUM_OF_NODES];
 };
   

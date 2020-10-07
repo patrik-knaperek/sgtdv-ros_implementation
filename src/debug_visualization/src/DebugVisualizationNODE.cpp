@@ -7,6 +7,8 @@
 #include <ros/ros.h>
 #include "../include/DebugVisualization.h"
 #include <visualization_msgs/Marker.h>
+#include <thread>
+#include <chrono>
 
 int main(int argc, char** argv)
 {
@@ -18,10 +20,8 @@ int main(int argc, char** argv)
     ros::Publisher publisher = handle.advertise<visualization_msgs::Marker>("debug_visualization_out", 1);
     debugVisualization.SetPublisher(publisher);
 
-    //ros::Subscriber cameraSub = handle.subscribe("camera_cones", 1, &FusionSynch::DoCamera, &synchObj);
-   // ros::Subscriber lidarSub = handle.subscribe("lidar_cones", 1, &FusionSynch::DoLidar, &synchObj);
-
-    //debugVisualization.InitRViz();
+   // ros::Subscriber cameraSub = handle.subscribe("camera_cones", 1, &FusionSynch::DoCamera, &synchObj);
+    //ros::Subscriber lidarSub = handle.subscribe("lidar_cones", 1, &FusionSynch::DoLidar, &synchObj);
 
     ros::spin();
 
