@@ -16,6 +16,7 @@ int main(int argc, char** argv)
     ros::NodeHandle handle;
 
     ros::Publisher publisher = handle.advertise<visualization_msgs::Marker>("debug_visualization_out", 1);
+    debugVisualization.SetPublisher(publisher);
 
     //ros::Subscriber cameraSub = handle.subscribe("camera_cones", 1, &FusionSynch::DoCamera, &synchObj);
    // ros::Subscriber lidarSub = handle.subscribe("lidar_cones", 1, &FusionSynch::DoLidar, &synchObj);
