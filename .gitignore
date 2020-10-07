@@ -13,6 +13,7 @@
 !.vscode/launch.json
 !.vscode/extensions.json
 .history/*
+src/.vscode
 
 devel
 build
