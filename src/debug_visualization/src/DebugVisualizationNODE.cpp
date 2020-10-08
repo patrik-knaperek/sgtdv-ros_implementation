@@ -27,17 +27,7 @@ int main(int argc, char** argv)
     ros::Subscriber pathTrackingSub = handle.subscribe("path_tracking_debug_state", 1, &DebugVisualization::DoPathTracking, &debugVisualization);
     ros::Subscriber jetsonCANInterface = handle.subscribe("jetson_can_interface_debug_state", 1, &DebugVisualization::DoJetsonCANInterface, &debugVisualization);
 
-    // std::this_thread::sleep_for(std::chrono::seconds(5));
-    // debugVisualization.PublishEverything();
-    
-    auto lastTime = std::chrono::steady_clock::now();
-
-    while(ros::ok())
-    {      
-        debugVisualization.PublishEverything();
-    }
-
-    //ros::spin();
+    ros::spin();
 
     return 0;
 }
