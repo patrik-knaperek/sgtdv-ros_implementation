@@ -23,7 +23,7 @@ int main(int argc, char** argv)
     while(ros::ok())
     {
         std::cin >> control.speed;
-       jetsonCanInterface.Do(control);
+        jetsonCanInterface.Do(control);
     }
 
     return 0;

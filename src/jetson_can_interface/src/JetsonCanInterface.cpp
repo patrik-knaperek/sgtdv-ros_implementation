@@ -47,7 +47,7 @@ void JetsonCanInterface::Do(const sgtdv_msgs::Control::ConstPtr &msg)
 
 void JetsonCanInterface::Do(const sgtdv_msgs::Control &msg)
 {
-   SPEED_CONTROL control;
+    SPEED_CONTROL control;
     control.status_flag = 0;
     control.required_RPM = msg.speed;
     control.timestamp = 0;

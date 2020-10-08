@@ -3,7 +3,6 @@
 //Authors: Juraj Krasňanský
 /*****************************************************/
 
-
 #include <ros/ros.h>
 #include "../include/DebugVisualization.h"
 #include <visualization_msgs/Marker.h>
@@ -20,10 +19,25 @@ int main(int argc, char** argv)
     ros::Publisher publisher = handle.advertise<visualization_msgs::Marker>("debug_visualization_out", 1);
     debugVisualization.SetPublisher(publisher);
 
-   // ros::Subscriber cameraSub = handle.subscribe("camera_cones", 1, &FusionSynch::DoCamera, &synchObj);
-    //ros::Subscriber lidarSub = handle.subscribe("lidar_cones", 1, &FusionSynch::DoLidar, &synchObj);
+    ros::Subscriber cameraSub = handle.subscribe("camera_cone_detection_debug_state", 1, &DebugVisualization::DoCamera, &debugVisualization);
+    ros::Subscriber lidarSub = handle.subscribe("lidar_cone_detection_debug_state", 1, &DebugVisualization::DoLidar, &debugVisualization);
+    ros::Subscriber fusionSub = handle.subscribe("fusion_debug_state", 1, &DebugVisualization::DoFusion, &debugVisualization);
+    ros::Subscriber slamSub = handle.subscribe("slam_debug_state", 1, &DebugVisualization::DoSLAM, &debugVisualization);
+    ros::Subscriber pathPlanningSub = handle.subscribe("path_planning_debug_state", 1, &DebugVisualization::DoPathPlanning, &debugVisualization);
+    ros::Subscriber pathTrackingSub = handle.subscribe("path_tracking_debug_state", 1, &DebugVisualization::DoPathTracking, &debugVisualization);
+    ros::Subscriber jetsonCANInterface = handle.subscribe("jetson_can_interface_debug_state", 1, &DebugVisualization::DoJetsonCANInterface, &debugVisualization);
 
-    ros::spin();
+    // std::this_thread::sleep_for(std::chrono::seconds(5));
+    // debugVisualization.PublishEverything();
+    
+    auto lastTime = std::chrono::steady_clock::now();
+
+    while(ros::ok())
+    {      
+        debugVisualization.PublishEverything();
+    }
+
+    //ros::spin();
 
     return 0;
 }
