@@ -157,6 +157,7 @@ void DebugVisualization::Do(const sgtdv_msgs::DebugState::ConstPtr &msg, NODE_TY
         
         auto now = std::chrono::steady_clock::now();
         auto workLoadTime = (std::chrono::duration_cast<std::chrono::milliseconds>(now - m_startTime[type])).count();
+
         ss << workLoadTime << " ms";
         m_nodeWorkTime[type].text = ss.str();
         ss.str("");
