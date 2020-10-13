@@ -222,7 +222,7 @@ void DebugVisualization::DoLidar(const sgtdv_msgs::DebugState::ConstPtr &msg)
 
 void DebugVisualization::DoFusion(const sgtdv_msgs::DebugState::ConstPtr &msg)
 {
-    Do(msg, LIDAR);
+    Do(msg, FUSION);
 }
 
 void DebugVisualization::DoSLAM(const sgtdv_msgs::DebugState::ConstPtr &msg)
