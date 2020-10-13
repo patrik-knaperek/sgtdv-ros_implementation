@@ -26,8 +26,9 @@ constexpr const char* LINE_CONNECTION_NAMESPACE = "lineConnections";
 constexpr const char* NAMES_NAMESPACE = "nodeNames";
 constexpr const char* FREQUENCY_NAMESPACE = "nodeFrequency";
 constexpr const char* WORKTIME_NAMESPACE = "nodeWorkTime";
-constexpr const float X_OFFSET = -2.f;
-constexpr const float Y_OFFSET = 2.f;
+constexpr const char* OUTPUTS_NAMESPACE = "nodeOutputs";
+constexpr const float X_GLOBAL_OFFSET = -2.f;
+constexpr const float Y_GLOBAL_OFFSET = 2.f;
 
 class DebugVisualization
 {
@@ -54,7 +55,7 @@ struct NodeGeometry
 
 public:
     DebugVisualization();
-    void InitRViz();
+
     void SetPublisher(ros::Publisher publisher) { m_publisher = publisher; }
     
     void DoCamera(const sgtdv_msgs::DebugState::ConstPtr &msg);
@@ -70,6 +71,7 @@ public:
     void PublishAllNames();
     void PublishAllWorkTimes();
     void PublishAllFrequencies();
+    void PublishAllOutputs();
     void PublishEverything();
 
 
@@ -80,6 +82,7 @@ private:
     visualization_msgs::Marker m_nodeNames[NUM_OF_NODES];
     visualization_msgs::Marker m_nodeFrequency[NUM_OF_NODES];
     visualization_msgs::Marker m_nodeWorkTime[NUM_OF_NODES];
+    visualization_msgs::Marker m_nodeOutputs[NUM_OF_NODES];
 
     std::chrono::time_point<std::chrono::steady_clock> m_startTime[NUM_OF_NODES];
     std::chrono::time_point<std::chrono::steady_clock> m_endTime[NUM_OF_NODES];
@@ -90,6 +93,7 @@ private:
     void InitNodeNames();
     void InitNodeFrequency();
     void InitNodeWorkTime();
+    void InitNodeOutputs();
 
     void PrintError(const char* NODE) const;
     void SetMarkerColor(float r, float g, float b, NODE_TYPE type);

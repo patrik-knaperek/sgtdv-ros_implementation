@@ -27,7 +27,12 @@ int main(int argc, char** argv)
     ros::Subscriber pathTrackingSub = handle.subscribe("path_tracking_debug_state", 1, &DebugVisualization::DoPathTracking, &debugVisualization);
     ros::Subscriber jetsonCANInterface = handle.subscribe("jetson_can_interface_debug_state", 1, &DebugVisualization::DoJetsonCANInterface, &debugVisualization);
 
-    ros::spin();
+    //ros::spin();
+
+    while(ros::ok())
+    {
+        debugVisualization.PublishEverything();
+    }
 
     return 0;
 }

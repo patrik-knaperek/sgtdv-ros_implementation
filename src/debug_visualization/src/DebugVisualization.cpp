@@ -7,13 +7,13 @@
 
 const DebugVisualization::NodeGeometry DebugVisualization::m_NODE_GEOMETRY[7] = 
 {
-    NodeGeometry(FPoint2D(0.f + X_OFFSET, 0.f + Y_OFFSET), 2.f, 1.f),       //camera
-    NodeGeometry(FPoint2D(0.f + X_OFFSET, -2.f + Y_OFFSET), 2.f, 1.f),      //lidar
-    NodeGeometry(FPoint2D(4.f + X_OFFSET, -1.f + Y_OFFSET), 2.f, 1.f),      //fusion
-    NodeGeometry(FPoint2D(4.f + X_OFFSET, -3.f + Y_OFFSET), 2.f, 1.f),      //slam
-    NodeGeometry(FPoint2D(4.f + X_OFFSET, -5.f + Y_OFFSET), 2.f, 1.f),      //pathPlanning
-    NodeGeometry(FPoint2D(4.f + X_OFFSET, -7.f + Y_OFFSET), 2.f, 1.f),      //pathTracking
-    NodeGeometry(FPoint2D(4.f + X_OFFSET, -9.f + Y_OFFSET), 2.f, 1.f)       //jetsonCanInterface
+    NodeGeometry(FPoint2D(0.f + X_GLOBAL_OFFSET, 0.f + Y_GLOBAL_OFFSET), 2.f, 1.f),       //camera
+    NodeGeometry(FPoint2D(0.f + X_GLOBAL_OFFSET, -2.f + Y_GLOBAL_OFFSET), 2.f, 1.f),      //lidar
+    NodeGeometry(FPoint2D(4.f + X_GLOBAL_OFFSET, -1.f + Y_GLOBAL_OFFSET), 2.f, 1.f),      //fusion
+    NodeGeometry(FPoint2D(4.f + X_GLOBAL_OFFSET, -3.f + Y_GLOBAL_OFFSET), 2.f, 1.f),      //slam
+    NodeGeometry(FPoint2D(4.f + X_GLOBAL_OFFSET, -5.f + Y_GLOBAL_OFFSET), 2.f, 1.f),      //pathPlanning
+    NodeGeometry(FPoint2D(4.f + X_GLOBAL_OFFSET, -7.f + Y_GLOBAL_OFFSET), 2.f, 1.f),      //pathTracking
+    NodeGeometry(FPoint2D(4.f + X_GLOBAL_OFFSET, -9.f + Y_GLOBAL_OFFSET), 2.f, 1.f)       //jetsonCanInterface
 };
 
 DebugVisualization::NodeGeometry::NodeGeometry(const FPoint2D &position, float scaleX, float scaleY)
@@ -41,6 +41,7 @@ DebugVisualization::DebugVisualization()
     InitNodeNames();
     InitNodeFrequency();
     InitNodeWorkTime();
+    InitNodeOutputs();
 }
 
 void DebugVisualization::InitConnectionLines()
@@ -63,9 +64,9 @@ void DebugVisualization::InitConnectionLines()
         m_connectionLines[i].pose.orientation.z = 0.f;
 
         m_connectionLines[i].color.a = 1.f;
-        m_connectionLines[i].color.r = 1.f;
-        m_connectionLines[i].color.g = 1.f;
-        m_connectionLines[i].color.b = 1.f;
+        m_connectionLines[i].color.r = 0.5f;
+        m_connectionLines[i].color.g = 0.5f;
+        m_connectionLines[i].color.b = 0.5f;
 
         m_connectionLines[i].pose.position = FPoint2D(0.f, 0.f).GetPoint();
 
@@ -108,6 +109,35 @@ void DebugVisualization::InitNodes()
     }
 }
 
+void DebugVisualization::InitNodeOutputs()
+{
+    for(int32_t i = 0; i < NUM_OF_NODES; i++)
+    {
+        m_nodeOutputs[i].header.frame_id = FRAME_ID;
+        m_nodeOutputs[i].ns = OUTPUTS_NAMESPACE;
+        m_nodeOutputs[i].id = i;
+        m_nodeOutputs[i].action = visualization_msgs::Marker::ADD;
+
+        m_nodeOutputs[i].type = visualization_msgs::Marker::TEXT_VIEW_FACING;
+        m_nodeOutputs[i].scale.z = 0.5f;
+
+        m_nodeOutputs[i].pose.orientation.w = 1.f;
+        m_nodeOutputs[i].pose.orientation.x = 0.f;
+        m_nodeOutputs[i].pose.orientation.y = 0.f;
+        m_nodeOutputs[i].pose.orientation.z = 0.f;
+
+        m_nodeOutputs[i].color.a = 1.f;
+        m_nodeOutputs[i].color.r = 1.f;
+        m_nodeOutputs[i].color.g = 1.f;
+        m_nodeOutputs[i].color.b = 1.f;
+
+        m_nodeOutputs[i].pose.position.x = m_NODE_GEOMETRY[i].position.GetPoint().x + 1.f;
+        m_nodeOutputs[i].pose.position.y = m_NODE_GEOMETRY[i].position.GetPoint().y - 0.5f;
+        m_nodeOutputs[i].pose.position.z = 1.f;
+        m_nodeOutputs[i].text = "OUTPUT";
+    }
+}
+
 void DebugVisualization::PrintError(const char* NODE) const
 {
     std::cout << "ERROR: Unknown debug state received - " << NODE << std::endl;
@@ -136,6 +166,26 @@ void DebugVisualization::Do(const sgtdv_msgs::DebugState::ConstPtr &msg, NODE_TY
         ss << 1.f / seconds << " Hz";
         m_nodeFrequency[type].text = ss.str();
         m_endTime[type] = now;
+        ss.str("");
+
+        switch(type)
+        {
+            case CAMERA:
+            case LIDAR:
+            case FUSION:
+            case SLAM:
+                ss << msg->numOfCones << " cones";                
+                break;
+                
+            case PATH_TRACKING:
+            case JETSON_CAN_INTERFACE:
+                ss << "Speed: " << msg->speed << " Angle: " << msg->angle;                
+                break;
+            default:
+                break;
+        }
+
+        m_nodeOutputs[type].text = ss.str();
     }
     else
     {
@@ -149,11 +199,13 @@ void DebugVisualization::Do(const sgtdv_msgs::DebugState::ConstPtr &msg, NODE_TY
     m_connectionLines[type].header.stamp = now;
     m_nodeWorkTime[type].header.stamp = now;
     m_nodeFrequency[type].header.stamp = now;
+    m_nodeOutputs[type].header.stamp = now;
 
     m_publisher.publish(m_nodeMarkers[type]);
     m_publisher.publish(m_connectionLines[type]);
     m_publisher.publish(m_nodeWorkTime[type]);
     m_publisher.publish(m_nodeFrequency[type]);
+    m_publisher.publish(m_nodeOutputs[type]);
 }
 
 void DebugVisualization::DoCamera(const sgtdv_msgs::DebugState::ConstPtr &msg)
@@ -347,6 +399,15 @@ void DebugVisualization::PublishAllFrequencies()
     }
 }
 
+void DebugVisualization::PublishAllOutputs()
+{
+    for(int32_t i = 0; i < NUM_OF_NODES; i++)
+    {
+        m_nodeOutputs[i].header.stamp = ros::Time::now();
+        m_publisher.publish(m_nodeOutputs[i]);
+    }
+}
+
 void DebugVisualization::PublishEverything()
 {
     ros::Time now = ros::Time::now();
@@ -357,11 +418,13 @@ void DebugVisualization::PublishEverything()
         m_nodeNames[i].header.stamp = now;
         m_nodeFrequency[i].header.stamp = now;
         m_nodeWorkTime[i].header.stamp = now;
+        m_nodeOutputs[i].header.stamp = now;
 
         m_publisher.publish(m_nodeMarkers[i]);      
         m_publisher.publish(m_nodeNames[i]);
         m_publisher.publish(m_nodeFrequency[i]);
         m_publisher.publish(m_nodeWorkTime[i]);
+        m_publisher.publish(m_nodeOutputs[i]);
     }
 
     for (int32_t i = 0; i < NUM_OF_CONNECTION_LINES; i++)
