@@ -211,6 +211,8 @@ void DebugVisualization::Do(const sgtdv_msgs::DebugState::ConstPtr &msg, NODE_TY
 void DebugVisualization::DoCamera(const sgtdv_msgs::DebugState::ConstPtr &msg)
 {
     Do(msg, CAMERA);
+    PublishAllConnectionLines();
+    PublishAllNames();
 }
 
 void DebugVisualization::DoLidar(const sgtdv_msgs::DebugState::ConstPtr &msg)
