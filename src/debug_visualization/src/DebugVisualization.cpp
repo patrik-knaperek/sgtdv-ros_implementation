@@ -36,6 +36,7 @@ geometry_msgs::Point DebugVisualization::FPoint2D::GetPoint() const
 
 DebugVisualization::DebugVisualization()
 {
+    InitMarkerArray();
     InitNodes();
     InitConnectionLines();
     InitNodeNames();
@@ -149,6 +150,7 @@ void DebugVisualization::Do(const sgtdv_msgs::DebugState::ConstPtr &msg, NODE_TY
     {        
         SetMarkerColorRed(type);
         m_startTime[type] = std::chrono::steady_clock::now();
+        m_bStarted[type] = true;
     }
     else if (msg->workingState == 0)
     {
@@ -157,6 +159,8 @@ void DebugVisualization::Do(const sgtdv_msgs::DebugState::ConstPtr &msg, NODE_TY
         
         auto now = std::chrono::steady_clock::now();
         auto workLoadTime = (std::chrono::duration_cast<std::chrono::milliseconds>(now - m_startTime[type])).count();
+
+        if (!m_bStarted[type]) workLoadTime = 0;
 
         ss << workLoadTime << " ms";
         m_nodeWorkTime[type].text = ss.str();
@@ -201,19 +205,12 @@ void DebugVisualization::Do(const sgtdv_msgs::DebugState::ConstPtr &msg, NODE_TY
     m_nodeWorkTime[type].header.stamp = now;
     m_nodeFrequency[type].header.stamp = now;
     m_nodeOutputs[type].header.stamp = now;
-
-    m_publisher.publish(m_nodeMarkers[type]);
-    m_publisher.publish(m_connectionLines[type]);
-    m_publisher.publish(m_nodeWorkTime[type]);
-    m_publisher.publish(m_nodeFrequency[type]);
-    m_publisher.publish(m_nodeOutputs[type]);
+    m_bStarted[type] = false;
 }
 
 void DebugVisualization::DoCamera(const sgtdv_msgs::DebugState::ConstPtr &msg)
 {
     Do(msg, CAMERA);
-    PublishAllConnectionLines();
-    PublishAllNames();
 }
 
 void DebugVisualization::DoLidar(const sgtdv_msgs::DebugState::ConstPtr &msg)
@@ -357,82 +354,19 @@ void DebugVisualization::InitNodeWorkTime()
     }
 }
 
-void DebugVisualization::PublishAllNodes()
+void DebugVisualization::InitMarkerArray()
 {
-    for(int32_t i = 0; i < NUM_OF_NODES; i++)
-    {
-        m_nodeMarkers[i].header.stamp = ros::Time::now();
-        m_publisher.publish(m_nodeMarkers[i]);
-    }
+    m_markerArray.markers.resize(5 * NUM_OF_NODES + NUM_OF_CONNECTION_LINES);
+
+    m_connectionLines = &(m_markerArray.markers[0]);
+    m_nodeMarkers = m_connectionLines + NUM_OF_CONNECTION_LINES;
+    m_nodeNames = m_nodeMarkers + NUM_OF_NODES;
+    m_nodeFrequency = m_nodeNames + NUM_OF_NODES;
+    m_nodeWorkTime = m_nodeFrequency + NUM_OF_NODES;
+    m_nodeOutputs = m_nodeWorkTime + NUM_OF_NODES;    
 }
 
-void DebugVisualization::PublishAllConnectionLines()
+void DebugVisualization::PublishEverythingAsArray()
 {
-    for(int32_t i = 0; i < NUM_OF_CONNECTION_LINES; i++)
-    {
-        m_connectionLines[i].header.stamp = ros::Time::now();
-        m_publisher.publish(m_connectionLines[i]);
-    }
-}
-
-void DebugVisualization::PublishAllNames()
-{
-    for(int32_t i = 0; i < NUM_OF_NODES; i++)
-    {
-        m_nodeNames[i].header.stamp = ros::Time::now();
-        m_publisher.publish(m_nodeNames[i]);
-    }
-}
-
-void DebugVisualization::PublishAllWorkTimes()
-{
-    for(int32_t i = 0; i < NUM_OF_NODES; i++)
-    {
-        m_nodeWorkTime[i].header.stamp = ros::Time::now();
-        m_publisher.publish(m_nodeWorkTime[i]);
-    }
-}
-
-void DebugVisualization::PublishAllFrequencies()
-{
-    for(int32_t i = 0; i < NUM_OF_NODES; i++)
-    {
-        m_nodeFrequency[i].header.stamp = ros::Time::now();
-        m_publisher.publish(m_nodeFrequency[i]);
-    }
-}
-
-void DebugVisualization::PublishAllOutputs()
-{
-    for(int32_t i = 0; i < NUM_OF_NODES; i++)
-    {
-        m_nodeOutputs[i].header.stamp = ros::Time::now();
-        m_publisher.publish(m_nodeOutputs[i]);
-    }
-}
-
-void DebugVisualization::PublishEverything()
-{
-    ros::Time now = ros::Time::now();
-
-    for (int32_t i = 0; i < NUM_OF_NODES; i++)
-    {
-        m_nodeMarkers[i].header.stamp = now;
-        m_nodeNames[i].header.stamp = now;
-        m_nodeFrequency[i].header.stamp = now;
-        m_nodeWorkTime[i].header.stamp = now;
-        m_nodeOutputs[i].header.stamp = now;
-
-        m_publisher.publish(m_nodeMarkers[i]);      
-        m_publisher.publish(m_nodeNames[i]);
-        m_publisher.publish(m_nodeFrequency[i]);
-        m_publisher.publish(m_nodeWorkTime[i]);
-        m_publisher.publish(m_nodeOutputs[i]);
-    }
-
-    for (int32_t i = 0; i < NUM_OF_CONNECTION_LINES; i++)
-    {
-        m_connectionLines[i].header.stamp = now;
-        m_publisher.publish(m_connectionLines[i]);
-    }    
+    m_publisher.publish(m_markerArray);
 }

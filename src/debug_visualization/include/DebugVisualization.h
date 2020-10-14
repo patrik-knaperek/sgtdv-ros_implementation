@@ -9,6 +9,7 @@
 #include <sgtdv_msgs/DebugState.h>
 #include <geometry_msgs/Point.h>
 #include <visualization_msgs/Marker.h>
+#include <visualization_msgs/MarkerArray.h>
 #include <chrono>
 #include <string>
 #include <sstream>
@@ -73,21 +74,24 @@ public:
     void PublishAllFrequencies();
     void PublishAllOutputs();
     void PublishEverything();
-
+    void PublishEverythingAsArray();
 
 private:
     ros::Publisher m_publisher;
-    visualization_msgs::Marker m_nodeMarkers[NUM_OF_NODES];
-    visualization_msgs::Marker m_connectionLines[NUM_OF_CONNECTION_LINES];
-    visualization_msgs::Marker m_nodeNames[NUM_OF_NODES];
-    visualization_msgs::Marker m_nodeFrequency[NUM_OF_NODES];
-    visualization_msgs::Marker m_nodeWorkTime[NUM_OF_NODES];
-    visualization_msgs::Marker m_nodeOutputs[NUM_OF_NODES];
+    visualization_msgs::Marker *m_connectionLines = nullptr;
+    visualization_msgs::Marker *m_nodeMarkers = nullptr;
+    visualization_msgs::Marker *m_nodeNames = nullptr;
+    visualization_msgs::Marker *m_nodeFrequency = nullptr;
+    visualization_msgs::Marker *m_nodeWorkTime = nullptr;
+    visualization_msgs::Marker *m_nodeOutputs = nullptr;
+    visualization_msgs::MarkerArray m_markerArray;
+    bool m_bStarted[NUM_OF_NODES] = { false, false, false, false, false, false, false };
 
     std::chrono::time_point<std::chrono::steady_clock> m_startTime[NUM_OF_NODES];
     std::chrono::time_point<std::chrono::steady_clock> m_endTime[NUM_OF_NODES];
 
     void Do(const sgtdv_msgs::DebugState::ConstPtr &msg, NODE_TYPE type);
+    void InitMarkerArray();
     void InitConnectionLines();    
     void InitNodes();
     void InitNodeNames();

@@ -9,6 +9,9 @@
 #include <thread>
 #include <chrono>
 
+constexpr int FPS = 60;
+constexpr int TIME_PER_FRAME_MS = 1000 / FPS;
+
 int main(int argc, char** argv)
 {
     DebugVisualization debugVisualization;
@@ -16,7 +19,7 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "debugVisualization");
     ros::NodeHandle handle;
 
-    ros::Publisher publisher = handle.advertise<visualization_msgs::Marker>("debug_visualization_out", 1);
+    ros::Publisher publisher = handle.advertise<visualization_msgs::MarkerArray>("debug_visualization_out", 1);
     debugVisualization.SetPublisher(publisher);
 
     ros::Subscriber cameraSub = handle.subscribe("camera_cone_detection_debug_state", 1, &DebugVisualization::DoCamera, &debugVisualization);
@@ -27,7 +30,25 @@ int main(int argc, char** argv)
     ros::Subscriber pathTrackingSub = handle.subscribe("path_tracking_debug_state", 1, &DebugVisualization::DoPathTracking, &debugVisualization);
     ros::Subscriber jetsonCANInterface = handle.subscribe("jetson_can_interface_debug_state", 1, &DebugVisualization::DoJetsonCANInterface, &debugVisualization);
 
-    ros::spin();
+    while (ros::ok())
+    {
+        auto start = std::chrono::steady_clock::now();
+
+        debugVisualization.PublishEverythingAsArray();
+
+        auto end = std::chrono::steady_clock::now();
+
+        auto timeSpent = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+
+        int timeDiff = TIME_PER_FRAME_MS - timeSpent;
+
+        if (timeDiff > 0.f)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(timeDiff));
+        }
+
+        ros::spinOnce();
+    }    
 
     return 0;
 }
