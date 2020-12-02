@@ -14,7 +14,8 @@
 #include <vector>
 
 constexpr double CYLINDER_SCALING_FACTOR = .7f;
-constexpr double CUBE_SCALING_FACTOR = .7f;
+constexpr double CUBE_SCALING_FACTOR = .4f;
+constexpr double LINE_SCALING_FACTOR = .2f;
 
 class PathPlanningVisualizator
 {

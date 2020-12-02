@@ -118,6 +118,39 @@ void PathPlanningVisualizator::FillMarkerArray()
 
         m_markerArray.markers.push_back(marker);
     }    
+
+    visualization_msgs::Marker marker;
+
+    marker.header.frame_id = "/sgt_frame";
+    marker.ns = "lineGeometry";
+    marker.id = 0;
+    marker.action = visualization_msgs::Marker::ADD;
+
+    marker.type = visualization_msgs::Marker::LINE_STRIP;
+    marker.scale.x = LINE_SCALING_FACTOR;
+
+    marker.color.a = 1.f;
+    marker.color.r = 0.7f;
+    marker.color.g = 0.f;
+    marker.color.b = 0.f;
+
+    marker.points.reserve(m_path.size());
+
+    for(size_t i = 0; i < m_path.size(); ++i)
+    {
+        marker.points.push_back(m_path[i].GetPoint(m_scalingFactor));
+    }
+
+    marker.pose.position.x = 0.;
+    marker.pose.position.y = 0.;
+    marker.pose.position.z = 0.;
+
+    marker.pose.orientation.w = 1.f;
+    marker.pose.orientation.x = 0.f;
+    marker.pose.orientation.y = 0.f;
+    marker.pose.orientation.z = 0.f;
+
+    m_markerArray.markers.push_back(marker);
 }
 
 void PathPlanningVisualizator::DeleteAll()
