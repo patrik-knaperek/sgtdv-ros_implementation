@@ -65,6 +65,67 @@ void JetsonCanInterface::Do(const sgtdv_msgs::Control &msg)
     while(bytesWritten != CAN_BYTES_TO_SEND)
     {
         bytesWritten += write(m_socket, data + bytesWritten, CAN_BYTES_TO_SEND - bytesWritten);	
-//	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	    //std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
+}
+
+void JetsonCanInterface::DoListen(const std::vector<int> msgIDs)
+{
+    int listenSocket = socket(PF_CAN, SOCK_RAW, CAN_RAW);
+    ifreq ifr;
+    sockaddr_can socketAddress;
+    can_frame canFrame;
+    struct can_filter *idFilter = new can_filter[msgIDs.size()];
+
+    for(size_t i = 0; i < msgIDs.size(); ++i)
+    {
+        idFilter[i].can_id = msgIDs[i];
+        idFilter[i].can_mask = CAN_SFF_MASK;        
+    }
+
+    setsockopt(listenSocket, SOL_CAN_RAW, CAN_RAW_FILTER, idFilter, sizeof(*idFilter));
+
+    strcpy(ifr.ifr_name, NETWORKING_INTERFACE_NAME);
+    ioctl(listenSocket, SIOCGIFINDEX, &ifr);
+	
+    socketAddress.can_family  = AF_CAN;
+    socketAddress.can_ifindex = ifr.ifr_ifindex;
+
+    bind(listenSocket, (struct sockaddr *)&socketAddress, sizeof(socketAddress));
+
+    canFrame.can_id  = INVERTOR_MSG_ID;
+    canFrame.can_dlc = 8;
+
+    int nbytes = 0;
+
+    while (ros::ok())
+    {
+        nbytes = read(listenSocket, &canFrame, sizeof(struct can_frame));
+
+        if (nbytes < 0)
+        {
+            std::cerr << "can raw socket - read";
+            ros::shutdown();
+            delete[] idFilter;
+            return;
+        }
+
+        if (nbytes < sizeof(struct can_frame))
+        {
+            std::cerr << "read: incomplete CAN frame\n";
+            continue;
+        }
+
+        switch(canFrame.can_id)
+        {
+            case 0x230:
+            std::cout << "Got 230\n";
+            break;
+            default:
+            std::cout << "Unknown id\n";
+            break;
+        }
+    }
+
+    delete[] idFilter;
 }

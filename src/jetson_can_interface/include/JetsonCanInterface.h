@@ -3,6 +3,8 @@
 //Authors: Juraj Krasňanský
 /*****************************************************/
 
+#include <ros/ros.h>
+
 #include <sgtdv_msgs/Control.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,6 +23,7 @@
 #include <chrono>
 #include <thread>
 #include <byteswap.h>
+#include <vector>
 
 constexpr const char *NETWORKING_INTERFACE_NAME = "can0";
 constexpr int CAN_BYTES_TO_SEND = sizeof(can_frame);
@@ -42,6 +45,8 @@ public:
 
     void Do(const sgtdv_msgs::Control::ConstPtr &msg);
     void Do(const sgtdv_msgs::Control &msg);
+
+    static void DoListen(const std::vector<int> msgIDs);
 
 private:
     int m_socket = -1;
