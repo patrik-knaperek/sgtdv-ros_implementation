@@ -65,7 +65,7 @@ void JetsonCanInterface::Do(const sgtdv_msgs::Control &msg)
     while(bytesWritten != CAN_BYTES_TO_SEND)
     {
         bytesWritten += write(m_socket, data + bytesWritten, CAN_BYTES_TO_SEND - bytesWritten);	
-	    //std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	std::this_thread::sleep_for(std::chrono::milliseconds(300));
     }
 }
 
@@ -119,7 +119,13 @@ void JetsonCanInterface::DoListen(const std::vector<int> msgIDs)
         switch(canFrame.can_id)
         {
             case 0x230:
-            std::cout << "Got 230\n";
+	    if (*reinterpret_cast<uint64_t*>(canFrame.data) != 0)
+	    {
+	        std::cout << "Got 230\n";		
+	        ros::shutdown();
+	        delete[] idFilter;
+	        return;
+	    }
             break;
             default:
             std::cout << "Unknown id\n";
