@@ -30,7 +30,7 @@ void JetsonCanInterface::Do(const sgtdv_msgs::Control::ConstPtr &msg)
 {
     SPEED_CONTROL control;
     control.status_flag = 0;
-    control.required_RPM = 20;
+    control.required_RPM = 20;	//TODO set from msg
     control.timestamp = 0;
 
     uint64_t *temp = reinterpret_cast<uint64_t*>(&(m_canFrame.data));
@@ -48,9 +48,13 @@ void JetsonCanInterface::Do(const sgtdv_msgs::Control::ConstPtr &msg)
 void JetsonCanInterface::Do(const sgtdv_msgs::Control &msg)
 {
     SPEED_CONTROL control;
-    control.status_flag = 0;
+    control.status_flag = 1;
     control.required_RPM = msg.speed;
     control.timestamp = 0;
+
+    control.status_flag = __bswap_16(control.status_flag);	//MCU works with different endian
+    control.required_RPM = __bswap_16(control.required_RPM);
+    control.timestamp = __bswap_32(control.timestamp);    
 
     uint64_t *temp = reinterpret_cast<uint64_t*>(&(m_canFrame.data));
     (*temp) = *(reinterpret_cast<uint64_t*>(&control));
@@ -60,6 +64,7 @@ void JetsonCanInterface::Do(const sgtdv_msgs::Control &msg)
 
     while(bytesWritten != CAN_BYTES_TO_SEND)
     {
-        bytesWritten += write(m_socket, data + bytesWritten - 1, CAN_BYTES_TO_SEND - bytesWritten);
-    }  
+        bytesWritten += write(m_socket, data + bytesWritten, CAN_BYTES_TO_SEND - bytesWritten);	
+//	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
 }
