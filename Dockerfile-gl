@@ -60,11 +60,20 @@ RUN cd /usr/src/ROS_implementation/darknet && sed -i 's/GPU=0/GPU=1/g' Makefile 
 
 RUN cd /usr/src/ROS_implementation/
 
+# INSTALL Python3 ROS
+
+RUN pip3 install setuptools
+RUN apt-get install -y python3 python3-dev python3-pip build-essential
+RUN pip3 install rosdep rospkg rosinstall_generator rosinstall wstool vcstools catkin_tools catkin_pkg
+RUN pip3 install --upgrade pip
+RUN apt-get install -y python3-venv
+RUN apt-get install -y python3-tk
+
 # copy project
 COPY . .
 
 #edit dependencies as cuda and darknet
-RUN sed -i 's|    /usr/src/ROS_implementation/darknet/libdarknet.so #treba zmenit na aktualnu cestu|    /usr/src/ROS_implementation/darknet/libdarknet.so #treba zmenit na aktualnu cestu|g' /usr/src/ROS_implementation/src/camera_cone_detection/CMakeLists.txt
+RUN sed -i 's|    /media/xavier/42878bfd-b273-4b67-b59c-6af6f4a4834b/Detekcia/darknet/libdarknet.so|    /usr/src/ROS_implementation/darknet/libdarknet.so #treba zmenit na aktualnu cestu|g' /usr/src/ROS_implementation/src/camera_cone_detection/CMakeLists.txt
 
 RUN cd /usr/src/ROS_implementation/
 #CMD ["catkin_make", "-j1", "-l1"]
