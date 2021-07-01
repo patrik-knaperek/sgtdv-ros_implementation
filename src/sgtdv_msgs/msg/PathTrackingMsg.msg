@@ -1,4 +1,4 @@
 Point2DArr trajectory
-CarState carState
+CarPose carPose
 float32 speed
 float32 yawRate

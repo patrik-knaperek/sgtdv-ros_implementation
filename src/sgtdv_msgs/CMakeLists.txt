@@ -51,7 +51,7 @@ add_message_files(
   FILES
   Point2D.msg
   Cone.msg
-  CarState.msg
+  CarPose.msg
   ConeArr.msg
   Point2DArr.msg
   PathPlanningMsg.msg

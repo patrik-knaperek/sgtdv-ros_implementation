@@ -8,7 +8,7 @@
 #include "../include/JetsonCanInterface.h"
 #include <sgtdv_msgs/Control.h>
 #include <thread>
-
+#include <chrono>
 int main(int argc, char** argv)
 {
     JetsonCanInterface jetsonCanInterface;
@@ -17,19 +17,20 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "jetsonCanInterface");
     ros::NodeHandle handle;
 
-    ros::Subscriber pathTrackingSub = handle.subscribe("pathtracking_commands", 1, &JetsonCanInterface::Do, &jetsonCanInterface);
+    //ros::Subscriber pathTrackingSub = handle.subscribe("pathtracking_commands", 1, &JetsonCanInterface::Do, &jetsonCanInterface);
 
-    std::vector<int> msgIDListenFilter = {0x230};
+    //std::vector<int> msgIDListenFilter = {0x230};
 
-    listenThread = std::thread(&JetsonCanInterface::DoListen, msgIDListenFilter);
-    listenThread.detach();
+    //listenThread = std::thread(&JetsonCanInterface::DoListen, msgIDListenFilter);
+    //listenThread.detach();
 
     //ros::spin();
     sgtdv_msgs::Control control;
 
+
     while(ros::ok())
     {
-      //  std::cin >> control.speed;
+        std::cin >> control.speed;
         jetsonCanInterface.Do(control);
     }
 
