@@ -65,7 +65,7 @@ void JetsonCanInterface::Do(const sgtdv_msgs::Control &msg)
     while(bytesWritten != CAN_BYTES_TO_SEND)
     {
         bytesWritten += write(m_socket, data + bytesWritten, CAN_BYTES_TO_SEND - bytesWritten);	
-	std::this_thread::sleep_for(std::chrono::milliseconds(300));
+	    std::this_thread::sleep_for(std::chrono::milliseconds(300));
     }
 }
 

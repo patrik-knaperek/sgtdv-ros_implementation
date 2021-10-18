@@ -9,6 +9,7 @@
 #include <sgtdv_msgs/Control.h>
 #include <thread>
 #include <chrono>
+#include <std_msgs/Float64.h>
 
 
 #ifdef SGT_USE_JOYSTICK
@@ -21,6 +22,7 @@ constexpr int JS_EVENT_AXIS = 0x02;    /* joystick moved */
 constexpr int JS_EVENT_INIT = 0x80;    /* initial state of device */
 constexpr int MAX_AXIS_VALUE = 32767;
 constexpr int MAX_ALLOWED_TORQUE = 10;
+constexpr float MAX_ALLOWED_STEERING_VELOCITY = 0.5f;
 
 struct js_event {
 		__u32 time;     /* event timestamp in milliseconds */
@@ -43,12 +45,18 @@ int main(int argc, char** argv)
 {
     ros::init(argc, argv, "jetsonCanInterface");
     JetsonCanInterface jetsonCanInterface;
+    ros::NodeHandle handle;
+
+    ros::Publisher steeringPublisher = handle.advertise<std_msgs::Float64>("/steering_motor/joint_velocity_controller/command", 1);
 
 #ifdef SGT_USE_JOYSTICK
 
     sgtdv_msgs::Control control;
+    control.speed = 0;
+    std_msgs::Float64 steeringVelocity;
+    steeringVelocity.data = 0.;
 
-    int fd = open ("/dev/input/js1", O_RDONLY);
+    int fd = open ("/dev/input/js0", O_RDONLY);
 
     while (ros::ok())
     {       
@@ -64,21 +72,23 @@ int main(int argc, char** argv)
                     control.speed = -(e.value / static_cast<float>(MAX_AXIS_VALUE)) * MAX_ALLOWED_TORQUE;
                     std::cout << control.speed << "\n";
                     break;
-                case RIGHT_LEFT_RIGHT: break;
+                case RIGHT_LEFT_RIGHT:
+                    steeringVelocity.data = static_cast<double>((e.value / static_cast<float>(MAX_AXIS_VALUE)) * MAX_ALLOWED_STEERING_VELOCITY);
+                    std::cout << steeringVelocity.data << "\n";
+                    break;
                 case RIGHT_UP_DOWN: break;
                 default: break;
             }
 
-            //jetsonCanInterface.Do(control);
+            jetsonCanInterface.Do(control);
+            steeringPublisher.publish(steeringVelocity);            
         }
     }
 
     close(fd);
 
 #else
-    std::thread listenThread;
-
-    ros::NodeHandle handle;
+    std::thread listenThread;    
 
     ros::Subscriber pathTrackingSub = handle.subscribe("pathtracking_commands", 1, &JetsonCanInterface::Do, &jetsonCanInterface);
 
