@@ -23,6 +23,9 @@ constexpr int JS_EVENT_INIT = 0x80;    /* initial state of device */
 constexpr int MAX_AXIS_VALUE = 32767;
 constexpr int MAX_ALLOWED_TORQUE = 10;
 constexpr float MAX_ALLOWED_STEERING_VELOCITY = 0.5f;
+constexpr float DEADZONE_RATIO = 0.05;  //5% tolerance for zero value of analog stick
+constexpr int MIN_DEADZONE_VALUE = -static_cast<int>(MAX_AXIS_VALUE * DEADZONE_RATIO);
+constexpr int MAX_DEADZONE_VALUE = static_cast<int>(MAX_AXIS_VALUE * DEADZONE_RATIO);
 
 struct js_event {
 		__u32 time;     /* event timestamp in milliseconds */
@@ -69,13 +72,23 @@ int main(int argc, char** argv)
             {
                 case LEFT_LEFT_RIGHT: break;
                 case LEFT_UP_DOWN:
+
+                    if (e.value <= MAX_DEADZONE_VALUE && e.value >= 0 ||            //cannot check this before switch statement in case event is not axis but button
+                        e.value >= MIN_DEADZONE_VALUE && e.value <= 0) e.value = 0;                    
+
                     control.speed = -(e.value / static_cast<float>(MAX_AXIS_VALUE)) * MAX_ALLOWED_TORQUE;
                     std::cout << control.speed << "\n";
                     break;
+
                 case RIGHT_LEFT_RIGHT:
+
+                 if (e.value <= MAX_DEADZONE_VALUE && e.value >= 0 ||               //cannot check this before switch statement in case event is not axis but button
+                        e.value >= MIN_DEADZONE_VALUE && e.value <= 0) e.value = 0;
+
                     steeringVelocity.data = static_cast<double>((e.value / static_cast<float>(MAX_AXIS_VALUE)) * MAX_ALLOWED_STEERING_VELOCITY);
                     std::cout << steeringVelocity.data << "\n";
                     break;
+
                 case RIGHT_UP_DOWN: break;
                 default: break;
             }
