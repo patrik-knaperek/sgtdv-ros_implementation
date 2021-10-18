@@ -65,6 +65,7 @@ int main(int argc, char** argv)
     {       
         struct js_event e;
 	    size_t bytesRead = read (fd, &e, sizeof(e));
+        int value = 0;
 
         if (bytesRead == sizeof(e) && e.type == JS_EVENT_AXIS)
         {
@@ -74,18 +75,20 @@ int main(int argc, char** argv)
                 case LEFT_UP_DOWN:
 
                     if (e.value <= MAX_DEADZONE_VALUE && e.value >= 0 ||            //cannot check this before switch statement in case event is not axis but button
-                        e.value >= MIN_DEADZONE_VALUE && e.value <= 0) e.value = 0;                    
+                        e.value >= MIN_DEADZONE_VALUE && e.value <= 0) value = 0;
+                    else value = e.value;
 
-                    control.speed = -(e.value / static_cast<float>(MAX_AXIS_VALUE)) * MAX_ALLOWED_TORQUE;
+                    control.speed = -(value / static_cast<float>(MAX_AXIS_VALUE)) * MAX_ALLOWED_TORQUE;
                     std::cout << control.speed << "\n";
                     break;
 
                 case RIGHT_LEFT_RIGHT:
 
-                 if (e.value <= MAX_DEADZONE_VALUE && e.value >= 0 ||               //cannot check this before switch statement in case event is not axis but button
-                        e.value >= MIN_DEADZONE_VALUE && e.value <= 0) e.value = 0;
+                    if (e.value <= MAX_DEADZONE_VALUE && e.value >= 0 ||               //cannot check this before switch statement in case event is not axis but button
+                        e.value >= MIN_DEADZONE_VALUE && e.value <= 0) value = 0;
+                    else value = e.value;
 
-                    steeringVelocity.data = static_cast<double>((e.value / static_cast<float>(MAX_AXIS_VALUE)) * MAX_ALLOWED_STEERING_VELOCITY);
+                    steeringVelocity.data = static_cast<double>((value / static_cast<float>(MAX_AXIS_VALUE)) * MAX_ALLOWED_STEERING_VELOCITY);
                     std::cout << steeringVelocity.data << "\n";
                     break;
 
