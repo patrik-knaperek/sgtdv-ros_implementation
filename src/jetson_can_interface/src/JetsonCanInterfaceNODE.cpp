@@ -52,6 +52,18 @@ int main(int argc, char** argv)
 
     ros::Publisher steeringPublisher = handle.advertise<std_msgs::Float64>("/steering_motor/joint_velocity_controller/command", 1);
 
+    sgtdv_msgs::Control control1;
+
+    while(ros::ok())
+    {
+        //std::cin >> control1.speed;
+        jetsonCanInterface.Do(control1);
+        std::cout << "Seding control\n";
+    }
+
+    return 0;
+
+
 #ifdef SGT_USE_JOYSTICK
 
     sgtdv_msgs::Control control;
