@@ -21,7 +21,7 @@ constexpr int32_t NUM_OF_NODES = 7;
     enum name { v1 = 0, v2, v3, v4, v5, v6, v7};\
     const char *name##_STRINGS[NUM_OF_NODES] = { #v1, #v2, #v3, #v4, #v5, #v6, #v7};
 
-constexpr const char* FRAME_ID = "/sgt_frame";
+constexpr const char* FRAME_ID = "sgt_frame";
 constexpr const char* NODE_RECT_NAMESPACE = "nodeGeometry";
 constexpr const char* LINE_CONNECTION_NAMESPACE = "lineConnections";
 constexpr const char* NAMES_NAMESPACE = "nodeNames";
