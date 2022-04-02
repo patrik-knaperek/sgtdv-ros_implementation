@@ -50,6 +50,8 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   Point2D.msg
+  ConeWithCov.msg
+  ConeWithCovArr.msg
   Cone.msg
   CarPose.msg
   ConeArr.msg
