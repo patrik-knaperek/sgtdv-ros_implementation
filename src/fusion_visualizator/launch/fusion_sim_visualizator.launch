@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+    <include file="$(find fusion)/launch/fusion_sim.launch"/>
+    <node pkg="fusion_visualizator" type="fusion_visualizator" name="fusion_visualizator" output="screen"/>
+    <node pkg="rviz" type="rviz" name="fusion_visualizator_rviz"  respawn="false"
+        args="-d $(find fusion_visualizator)/rviz/fusion_sim_visualizator.rviz" output="screen">
+    </node>
+    
+</launch>
