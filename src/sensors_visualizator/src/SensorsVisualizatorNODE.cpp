@@ -3,13 +3,13 @@
 //Authors: Patrik Knaperek
 /*****************************************************/
 
-#include "../include/FusionVisualizator.h"
+#include "../include/SensorsVisualizator.h"
 
 int main(int argc, char** argv)
 {
-    ros::init(argc, argv, "fusion_visualizator");
+    ros::init(argc, argv, "sensorsVisualizator");
     ros::NodeHandle handle;
-    FusionVisualizator visualizatorObj;
+    SensorsVisualizator visualizatorObj;
 
     ros::Publisher cameraPub = handle.advertise<visualization_msgs::MarkerArray>("camera_visualize",1);
     ros::Publisher lidarPub = handle.advertise<visualization_msgs::MarkerArray>("lidar_visualize",1);
@@ -29,9 +29,9 @@ int main(int argc, char** argv)
         ROS_ERROR("Failed to get parameter from server\n");
     visualizatorObj.SetFrames(cameraFrameId, lidarFrameId, fusionFrameId);
 
-    ros::Subscriber cameraSub = handle.subscribe("/camera_cones", 1, &FusionVisualizator::DoCamera, &visualizatorObj);
-    ros::Subscriber lidarSub = handle.subscribe("/lidar_cones", 1, &FusionVisualizator::DoLidar, &visualizatorObj);
-    ros::Subscriber fusionSub = handle.subscribe("/fusion_cones", 1, &FusionVisualizator::DoFusion, &visualizatorObj);
+    ros::Subscriber cameraSub = handle.subscribe("/camera_cones", 1, &SensorsVisualizator::DoCamera, &visualizatorObj);
+    ros::Subscriber lidarSub = handle.subscribe("/lidar_cones", 1, &SensorsVisualizator::DoLidar, &visualizatorObj);
+    ros::Subscriber fusionSub = handle.subscribe("/fusion_cones", 1, &SensorsVisualizator::DoFusion, &visualizatorObj);
 
     ros::spin();
 

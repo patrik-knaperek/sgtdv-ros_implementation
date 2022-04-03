@@ -9,11 +9,11 @@
 #include <sgtdv_msgs/Point2DArr.h>
 #include <sgtdv_msgs/FusionMsg.h>
 
-class FusionVisualizator
+class SensorsVisualizator
 {
     public:
-        FusionVisualizator();
-        ~FusionVisualizator();
+        SensorsVisualizator();
+        ~SensorsVisualizator();
 
         // Setters
         void SetPublishers(ros::Publisher cameraPub, ros::Publisher lidarPub, ros::Publisher fusionPub)

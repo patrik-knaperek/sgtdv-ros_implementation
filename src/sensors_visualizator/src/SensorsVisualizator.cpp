@@ -3,21 +3,21 @@
 //Authors: Patrik Knaperek
 /*****************************************************/
 
-#include "../include/FusionVisualizator.h"
+#include "../include/SensorsVisualizator.h"
 
-FusionVisualizator::FusionVisualizator()
+SensorsVisualizator::SensorsVisualizator()
 {
     m_cameraMarkers.markers.reserve(20);
     m_lidarMarkers.markers.reserve(1000);
     m_fusionMarker.points.reserve(20);
 }
 
-FusionVisualizator::~FusionVisualizator()
+SensorsVisualizator::~SensorsVisualizator()
 {
 
 }
 
-void FusionVisualizator::DoCamera(const sgtdv_msgs::ConeArr::ConstPtr &msg)
+void SensorsVisualizator::DoCamera(const sgtdv_msgs::ConeArr::ConstPtr &msg)
 {
     DeleteMarkers(m_cameraMarkers, m_cameraPublisher, m_cameraFrameId);
     m_cameraMarkers.markers.clear();
@@ -83,7 +83,7 @@ void FusionVisualizator::DoCamera(const sgtdv_msgs::ConeArr::ConstPtr &msg)
     m_cameraPublisher.publish(m_cameraMarkers);  
 }
 
-void FusionVisualizator::DoLidar(const sgtdv_msgs::Point2DArr::ConstPtr &msg)
+void SensorsVisualizator::DoLidar(const sgtdv_msgs::Point2DArr::ConstPtr &msg)
 {
     DeleteMarkers(m_lidarMarkers, m_lidarPublisher, m_lidarFrameId);
     m_lidarMarkers.markers.clear();
@@ -118,7 +118,7 @@ void FusionVisualizator::DoLidar(const sgtdv_msgs::Point2DArr::ConstPtr &msg)
     m_lidarPublisher.publish(m_lidarMarkers);  
 }
 
-void FusionVisualizator::DoFusion(const sgtdv_msgs::ConeArr::ConstPtr &msg)
+void SensorsVisualizator::DoFusion(const sgtdv_msgs::ConeArr::ConstPtr &msg)
 {
     m_fusionMarker.points.clear();
     m_fusionMarker.colors.clear();
@@ -179,7 +179,7 @@ void FusionVisualizator::DoFusion(const sgtdv_msgs::ConeArr::ConstPtr &msg)
     m_fusionPublisher.publish(m_fusionMarker);  
 }
 
-void FusionVisualizator::DeleteMarkers(visualization_msgs::MarkerArray markerArray, 
+void SensorsVisualizator::DeleteMarkers(visualization_msgs::MarkerArray markerArray, 
 ros::Publisher publisher, std::string frameId)
 {
     markerArray.markers.clear();

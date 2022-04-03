@@ -7,7 +7,7 @@
 
 int main(int argc, char** argv)
 {
-    ros::init(argc, argv, "fusion_sim_interface");
+    ros::init(argc, argv, "fusionSimInterface");
     ros::NodeHandle handle;
     
     SimInterface simInterface;

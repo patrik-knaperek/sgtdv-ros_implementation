@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>fusion_visualizator</name>
+  <name>sensors_visualizator</name>
   <version>0.0.0</version>
-  <description>The fusion_visualizator package</description>
+  <description>The sensors_visualizator package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
