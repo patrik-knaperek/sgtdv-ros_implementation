@@ -17,3 +17,4 @@ documentation
 druha_jazda.svo
 yolov3-tiny.weights
 velodyne
+src/camera_cone_detection/recordings/

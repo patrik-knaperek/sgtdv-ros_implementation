@@ -105,7 +105,7 @@ void SensorsVisualizator::DoLidar(const sgtdv_msgs::Point2DArr::ConstPtr &msg)
         marker.scale.x = 0.1;
         marker.scale.y = 0.1;
         marker.scale.z = 0.1;
-        marker.color.a = 0.6;
+        marker.color.a = 0.4;
         marker.color.r = 1.0;
         marker.color.g = 0.0;
         marker.color.b = 0.0;
