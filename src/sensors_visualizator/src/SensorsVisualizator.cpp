@@ -19,7 +19,7 @@ SensorsVisualizator::~SensorsVisualizator()
 
 void SensorsVisualizator::DoCamera(const sgtdv_msgs::ConeArr::ConstPtr &msg)
 {
-    DeleteMarkers(m_cameraMarkers, m_cameraPublisher, m_cameraFrameId);
+    DeleteMarkers(m_cameraMarkers, m_cameraPublisher, msg->cones[0].coords.header.frame_id);
     m_cameraMarkers.markers.clear();
     
     for(int i = 0; i < msg->cones.size(); i++)
@@ -29,8 +29,7 @@ void SensorsVisualizator::DoCamera(const sgtdv_msgs::ConeArr::ConstPtr &msg)
         
         visualization_msgs::Marker marker;
         
-        marker.header.stamp = ros::Time();
-        marker.header.frame_id = m_cameraFrameId;
+        marker.header = msg->cones[i].coords.header;
         marker.type = marker.SPHERE;
         marker.action = marker.ADD;
         marker.id = i;
@@ -85,14 +84,13 @@ void SensorsVisualizator::DoCamera(const sgtdv_msgs::ConeArr::ConstPtr &msg)
 
 void SensorsVisualizator::DoLidar(const sgtdv_msgs::Point2DArr::ConstPtr &msg)
 {
-    DeleteMarkers(m_lidarMarkers, m_lidarPublisher, m_lidarFrameId);
+    DeleteMarkers(m_lidarMarkers, m_lidarPublisher, msg->points[0].header.frame_id);
     m_lidarMarkers.markers.clear();
     visualization_msgs::Marker marker;
     
     for (int i = 0; i< msg->points.size(); i++)
     {
-        marker.header.stamp = ros::Time();
-        marker.header.frame_id = m_lidarFrameId;
+        marker.header = msg->points[i].header;
         marker.type = marker.CYLINDER;
         marker.action = marker.ADD;
         marker.id = i;
@@ -123,8 +121,7 @@ void SensorsVisualizator::DoFusion(const sgtdv_msgs::ConeArr::ConstPtr &msg)
     m_fusionMarker.points.clear();
     m_fusionMarker.colors.clear();
     
-    m_fusionMarker.header.stamp = ros::Time();
-    m_fusionMarker.header.frame_id = m_fusionFrameId;
+    m_fusionMarker.header = msg->cones[0].coords.header;
     m_fusionMarker.type = m_fusionMarker.POINTS;
     m_fusionMarker.action = m_fusionMarker.ADD;
     m_fusionMarker.ns = "fusion_simple";

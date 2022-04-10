@@ -22,13 +22,6 @@ class SensorsVisualizator
             m_lidarPublisher = lidarPub;
             m_fusionPublisher = fusionPub;
         };
-
-        void SetFrames(std::string cameraFrameId, std::string lidarFrameId, std::string fusionFrameId)
-        {
-            m_cameraFrameId = cameraFrameId;
-            m_lidarFrameId = lidarFrameId;
-            m_fusionFrameId = fusionFrameId;
-        }
         
         // Callbacks
         void DoCamera(const sgtdv_msgs::ConeArr::ConstPtr &msg);
@@ -41,10 +34,6 @@ class SensorsVisualizator
         ros::Publisher m_cameraPublisher;
         ros::Publisher m_lidarPublisher;
         ros::Publisher m_fusionPublisher;
-
-        std::string m_cameraFrameId;
-        std::string m_lidarFrameId;
-        std::string m_fusionFrameId;
 
         visualization_msgs::MarkerArray m_cameraMarkers;
         visualization_msgs::MarkerArray m_lidarMarkers;
