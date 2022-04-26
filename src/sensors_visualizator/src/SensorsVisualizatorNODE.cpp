@@ -17,16 +17,13 @@ int main(int argc, char** argv)
     visualizatorObj.SetPublishers(cameraPub, lidarPub, fusionPub);
 
     std::string cameraFrameId;
-    if(!handle.getParam("/camera_frame", cameraFrameId))
-        ROS_ERROR("Failed to get parameter from server\n");
+    handle.param("/camera_frame", cameraFrameId, std::string("camera_left"));
 
     std::string lidarFrameId;
-    if(!handle.getParam("/lidar_frame", lidarFrameId))
-        ROS_ERROR("Failed to get parameter from server\n");
-
+    handle.param("/lidar_frame", lidarFrameId, std::string("lidar"));
+   
     std::string fusionFrameId;
-    if(!handle.getParam("/fixed_frame", fusionFrameId))
-        ROS_ERROR("Failed to get parameter from server\n");
+    handle.param("/fixed_frame", fusionFrameId, std::string("base_link"));
     visualizatorObj.SetFrames(cameraFrameId, lidarFrameId, fusionFrameId);
 
     ros::Subscriber cameraSub = handle.subscribe("/camera_cones", 1, &SensorsVisualizator::DoCamera, &visualizatorObj);
