@@ -29,6 +29,6 @@ include_directories(
 
 add_executable(${PROJECT_NAME} src/DebugVisualizationNODE.cpp src/DebugVisualization.cpp)
 
-target_link_libraries(debug_visualization
+target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
 )
