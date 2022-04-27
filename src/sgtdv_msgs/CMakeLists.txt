@@ -50,6 +50,8 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   Point2D.msg
+  ConeWithCov.msg
+  ConeWithCovArr.msg
   Cone.msg
   CarPose.msg
   ConeArr.msg
@@ -116,7 +118,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES sgtdv_msgs
-  CATKIN_DEPENDS message_runtime
+  CATKIN_DEPENDS message_runtime std_msgs geometry_msgs roscpp
 #  DEPENDS system_lib
 )
 
@@ -129,7 +131,9 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  ${roscpp_INCLUDE_DIRS}
 )
+
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
@@ -144,7 +148,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/sgtdv_msgs_node.cpp)
+ add_executable(${PROJECT_NAME} src/sgtdv_msgs.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -157,9 +161,11 @@ include_directories(
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(${PROJECT_NAME}_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(${PROJECT_NAME}
+   ${catkin_LIBRARIES}
+ )
+add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_generate_messages_cpp)
+# riesenie nevytvorenych headrov: https://www.theconstructsim.com/ros-qa-163-custom-message-fails-build-no-file-directory/
 
 #############
 ## Install ##
