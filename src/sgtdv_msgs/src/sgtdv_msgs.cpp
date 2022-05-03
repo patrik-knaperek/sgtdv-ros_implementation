@@ -12,5 +12,4 @@
 #include <sgtdv_msgs/Point2D.h>
 #include <sgtdv_msgs/Point2DArr.h>
 #include <sgtdv_msgs/SLAMMsg.h>
-#include <sgtdv_msgs/SensorCalibrationMsg.h>
 int main() { return 0; }

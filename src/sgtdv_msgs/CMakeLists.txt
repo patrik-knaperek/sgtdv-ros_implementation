@@ -63,7 +63,6 @@ add_message_files(
   ColoredConeArr.msg
   SLAMMsg.msg
   DebugState.msg
-  SensorCalibrationMsg.msg
 )
 
 ## Generate services in the 'srv' folder

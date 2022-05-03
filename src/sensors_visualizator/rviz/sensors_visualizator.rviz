@@ -109,10 +109,6 @@ Visualization Manager:
           Value: true
         lidar:
           Value: true
-<<<<<<< Updated upstream
-        velodyne:
-          Value: true
-=======
         map:
           Value: true
         odom:
@@ -122,22 +118,12 @@ Visualization Manager:
         velodyne:
           Value: true
       Marker Alpha: 1
->>>>>>> Stashed changes
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-<<<<<<< Updated upstream
-        base_link:
-          camera_center:
-            camera_left:
-              {}
-          lidar:
-            velodyne:
-              {}
-=======
         odom:
           base_link:
             camera_center:
@@ -146,7 +132,6 @@ Visualization Manager:
             lidar:
               velodyne:
                 {}
->>>>>>> Stashed changes
       Update Interval: 0
       Value: true
     - Alpha: 1
