@@ -19,7 +19,7 @@ SensorsVisualizator::~SensorsVisualizator()
 
 void SensorsVisualizator::DoCamera(const sgtdv_msgs::ConeArr::ConstPtr &msg)
 {
-    DeleteMarkers(m_cameraMarkers, m_cameraPublisher, msg->cones[0].coords.header.frame_id);
+    DeleteMarkers(m_cameraMarkers, m_cameraPublisher);
     m_cameraMarkers.markers.clear();
     
     for(int i = 0; i < msg->cones.size(); i++)
@@ -84,7 +84,7 @@ void SensorsVisualizator::DoCamera(const sgtdv_msgs::ConeArr::ConstPtr &msg)
 
 void SensorsVisualizator::DoLidar(const sgtdv_msgs::Point2DArr::ConstPtr &msg)
 {
-    DeleteMarkers(m_lidarMarkers, m_lidarPublisher, msg->points[0].header.frame_id);
+    DeleteMarkers(m_lidarMarkers, m_lidarPublisher);
     m_lidarMarkers.markers.clear();
     visualization_msgs::Marker marker;
     
@@ -177,12 +177,11 @@ void SensorsVisualizator::DoFusion(const sgtdv_msgs::ConeArr::ConstPtr &msg)
 }
 
 void SensorsVisualizator::DeleteMarkers(visualization_msgs::MarkerArray markerArray, 
-ros::Publisher publisher, std::string frameId)
+ros::Publisher publisher)
 {
     markerArray.markers.clear();
     visualization_msgs::Marker marker;
 
-    marker.header.frame_id = frameId;
     marker.id = 0;
     marker.action = marker.DELETEALL;
     markerArray.markers.push_back(marker);

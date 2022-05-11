@@ -28,7 +28,7 @@ class SensorsVisualizator
         void DoLidar(const sgtdv_msgs::Point2DArr::ConstPtr &msg);
         void DoFusion(const sgtdv_msgs::ConeArr::ConstPtr &msg);
         void DeleteMarkers(visualization_msgs::MarkerArray markerArray,
-                        ros::Publisher publisher, std::string frameId);
+                        ros::Publisher publisher);
 
     private:
         ros::Publisher m_cameraPublisher;
