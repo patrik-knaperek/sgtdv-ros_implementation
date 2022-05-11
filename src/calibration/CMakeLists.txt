@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(sgtdv_msgs)
+project(calibration)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -8,10 +8,16 @@ project(sgtdv_msgs)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  rospy
+  roslib
   std_msgs
-  geometry_msgs
-  message_generation
+  sgtdv_msgs
+  tf
+  eigen_conversions
 )
+
+find_package (Eigen3)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -47,23 +53,11 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-  FILES
-  Point2D.msg
-  ConeWithCov.msg
-  ConeWithCovArr.msg
-  Cone.msg
-  CarPose.msg
-  ConeArr.msg
-  Point2DArr.msg
-  PathPlanningMsg.msg
-  PathTrackingMsg.msg
-  Control.msg
-  FusionMsg.msg
-  ColoredConeArr.msg
-  SLAMMsg.msg
-  DebugState.msg
-)
+# add_message_files(
+#   FILES
+#   Message1.msg
+#   Message2.msg
+# )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -80,11 +74,10 @@ add_message_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-  DEPENDENCIES
-  std_msgs
-  geometry_msgs
-)
+# generate_messages(
+#   DEPENDENCIES
+#   std_msgs
+# )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -116,9 +109,9 @@ generate_messages(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES sgtdv_msgs
-  CATKIN_DEPENDS message_runtime std_msgs geometry_msgs roscpp
+#  INCLUDE_DIRS include ${Eigen3_INCLUDE_DIRS}
+#  LIBRARIES calibration
+#  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
 )
 
@@ -132,12 +125,12 @@ include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
   ${roscpp_INCLUDE_DIRS}
+  ${Eigen3_INCLUDE_DIRS}
 )
-
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/sgtdv_msgs.cpp
+#   src/${PROJECT_NAME}/calibration.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -148,7 +141,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
- add_executable(${PROJECT_NAME} src/sgtdv_msgs.cpp)
+add_executable(sensor_calibration src/SensorCalibration.cpp src/SensorCalibrationNODE.cpp src/SensorCalibrationSynch.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -161,11 +154,10 @@ include_directories(
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(sensor_calibration
    ${catkin_LIBRARIES}
- )
-add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_generate_messages_cpp)
-# riesenie nevytvorenych headrov: https://www.theconstructsim.com/ros-qa-163-custom-message-fails-build-no-file-directory/
+   ${Eigen3_INCLUDE_DIRS}
+)
 
 #############
 ## Install ##
@@ -176,7 +168,7 @@ add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_generate_messages_cpp)
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# install(PROGRAMS
+# catkin_install_python(PROGRAMS
 #   scripts/my_python_script
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
@@ -214,7 +206,7 @@ add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_generate_messages_cpp)
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_sgtdv_msgs.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_calibration.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

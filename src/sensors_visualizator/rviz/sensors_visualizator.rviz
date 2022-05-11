@@ -4,17 +4,10 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /Status1
-        - /Camera Detections1/Namespaces1
-        - /Lidar Detections1/Namespaces1
-        - /Fused Detections1/Namespaces1
-        - /TF1/Frames1
+
       Splitter Ratio: 0.5333333611488342
-<<<<<<< HEAD
     Tree Height: 748
-=======
-    Tree Height: 1272
->>>>>>> 8f58f1e... Added debug visualization to 'fusion_sim_interface'; 'sensors_visualizator' update
+
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -97,19 +90,30 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
-<<<<<<< HEAD
-=======
+
+      Value: true
+    - Class: rviz/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        All Enabled: false
+        base_link:
+          Value: true
+        camera_center:
+          Value: true
+        camera_left:
+          Value: true
+        lidar:
+          Value: true
+        map:
+          Value: true
+        odom:
+          Value: true
+        sgt_frame:
+          Value: true
+        velodyne:
+          Value: true
       Marker Alpha: 1
->>>>>>> 8f58f1e... Added debug visualization to 'fusion_sim_interface'; 'sensors_visualizator' update
-      Marker Scale: 1
-      Name: TF
-      Show Arrows: true
-      Show Axes: true
-      Show Names: true
-      Tree:
-        {}
-      Update Interval: 0
-      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
