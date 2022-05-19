@@ -2,8 +2,8 @@
 <launch>
     <include file="$(find fusion)/launch/fusion_sim.launch"/>
     <node pkg="sensors_visualizator" type="sensors_visualizator" name="sensorsVisualizator" output="screen"/>
-    <node pkg="rviz" type="rviz" name="sensorsVisualizator_rviz"  respawn="false"
+    <!--<node pkg="rviz" type="rviz" name="sensorsVisualizator_rviz"  respawn="false"
         args="-d $(find sensors_visualizator)/rviz/sensors_sim_visualizator.rviz" output="screen">
-    </node>
+    </node>-->
     
 </launch>

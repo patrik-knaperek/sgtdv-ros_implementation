@@ -9,3 +9,4 @@
 //#define SGT_DEBUG_STATE
 #define SGT_USE_JOYSTICK
 //#define FUSION_CONSOLE_SHOW
+#define SGT_EXPORT_DATA_CSV
