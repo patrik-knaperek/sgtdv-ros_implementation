@@ -9,7 +9,30 @@ SensorsVisualizator::SensorsVisualizator()
 {
     m_cameraMarkers.markers.reserve(20);
     m_lidarMarkers.markers.reserve(1000);
-    m_fusionMarker.points.reserve(20);
+    
+    m_fusionMarkers.markers.reserve(2);
+    visualization_msgs::Marker marker;
+    marker.type = marker.POINTS;
+    marker.ns = std::string("fusion");
+    marker.lifetime = ros::Duration(0.5);
+    marker.scale.x = 0.1;
+    marker.scale.y = 0.1;
+    marker.color.a = 1.0;
+    marker.points.reserve(20);
+    m_fusionMarkers.markers.push_back(marker);
+
+#ifdef SIMPLE_FUSION
+    visualization_msgs::Marker simpleMarker;
+    simpleMarker.type = simpleMarker.POINTS;
+    simpleMarker.ns = std::string("fusion_simple");
+    simpleMarker.lifetime = ros::Duration(0.5);
+    simpleMarker.scale.x = 0.1;
+    simpleMarker.scale.y = 0.1;
+    simpleMarker.color.a = 1.0;
+    simpleMarker.points.reserve(20);
+    m_fusionMarkers.markers.push_back(simpleMarker);
+#endif
+
 }
 
 SensorsVisualizator::~SensorsVisualizator()
@@ -33,7 +56,7 @@ void SensorsVisualizator::DoCamera(const sgtdv_msgs::ConeArr::ConstPtr &msg)
         marker.type = marker.SPHERE;
         marker.action = marker.ADD;
         marker.id = i;
-        m_fusionMarker.lifetime = ros::Duration(0.5);
+        marker.lifetime = ros::Duration(0.5);
         marker.pose.position.x = msg->cones[i].coords.x;
         marker.pose.position.y = msg->cones[i].coords.y;
         marker.pose.position.z = 0;
@@ -94,7 +117,7 @@ void SensorsVisualizator::DoLidar(const sgtdv_msgs::Point2DArr::ConstPtr &msg)
         marker.type = marker.CYLINDER;
         marker.action = marker.ADD;
         marker.id = i;
-        m_fusionMarker.lifetime = ros::Duration(0.5);
+        marker.lifetime = ros::Duration(0.5);
         marker.pose.position.x = msg->points[i].x;
         marker.pose.position.y = msg->points[i].y;
         marker.pose.position.z = 0.0;
@@ -118,17 +141,11 @@ void SensorsVisualizator::DoLidar(const sgtdv_msgs::Point2DArr::ConstPtr &msg)
 
 void SensorsVisualizator::DoFusion(const sgtdv_msgs::ConeArr::ConstPtr &msg)
 {
-    m_fusionMarker.points.clear();
-    m_fusionMarker.colors.clear();
+    m_fusionMarkers.markers[0].points.clear();
+    m_fusionMarkers.markers[0].colors.clear();
     
-    m_fusionMarker.header = msg->cones[0].coords.header;
-    m_fusionMarker.type = m_fusionMarker.POINTS;
-    m_fusionMarker.action = m_fusionMarker.ADD;
-    m_fusionMarker.ns = "fusion_simple";
-    m_fusionMarker.lifetime = ros::Duration(0.5);
-    m_fusionMarker.scale.x = 0.1;
-    m_fusionMarker.scale.y = 0.1;
-    m_fusionMarker.color.a = 1.0;
+    m_fusionMarkers.markers[0].header = msg->cones[0].coords.header;
+    m_fusionMarkers.markers[0].action = m_fusionMarkers.markers[0].MODIFY;
 
     geometry_msgs::Point point;
     std_msgs::ColorRGBA color;
@@ -169,12 +186,43 @@ void SensorsVisualizator::DoFusion(const sgtdv_msgs::ConeArr::ConstPtr &msg)
             color.r = color.g = color.b = 0;
         }
         
-        m_fusionMarker.points.push_back(point);
-        m_fusionMarker.colors.push_back(color);
+        m_fusionMarkers.markers[0].points.push_back(point);
+        m_fusionMarkers.markers[0].colors.push_back(color);
     }
     
-    m_fusionPublisher.publish(m_fusionMarker);  
+    m_fusionPublisher.publish(m_fusionMarkers);  
 }
+
+#ifdef SIMPLE_FUSION
+    void SensorsVisualizator::DoSimpleFusion(const sgtdv_msgs::ConeArr::ConstPtr &msg)
+    {
+        m_fusionMarkers.markers[1].points.clear();
+        m_fusionMarkers.markers[1].colors.clear();
+        
+        m_fusionMarkers.markers[1].header = msg->cones[0].coords.header;
+        m_fusionMarkers.markers[1].action = m_fusionMarkers.markers[1].MODIFY;
+
+        geometry_msgs::Point point;
+        std_msgs::ColorRGBA color;
+
+        for(int i = 0; i < msg->cones.size(); i++)
+        {
+            point.x = msg->cones[i].coords.x;
+            point.y = msg->cones[i].coords.y;
+            point.z = 0.0;
+
+            color.a = 1.0;
+            color.r = 0.9;
+            color.g = 0.6;
+            color.b = 0.9;
+
+            m_fusionMarkers.markers[1].points.push_back(point);
+            m_fusionMarkers.markers[1].colors.push_back(color);
+        }
+
+        m_fusionPublisher.publish(m_fusionMarkers);
+    }
+#endif
 
 void SensorsVisualizator::DeleteMarkers(visualization_msgs::MarkerArray markerArray, 
 ros::Publisher publisher)
