@@ -10,11 +10,14 @@
 .vscode
 src/.vscode
 
+# ROS
+.catkin_tools/
+logs
 devel
 build
 darknet
 documentation
-druha_jazda.svo
-yolov3-tiny.weights
 velodyne
+libdarknet.so
 src/camera_cone_detection/recordings/
+src/camera_cone_detection/Darknet_cone_detection/
