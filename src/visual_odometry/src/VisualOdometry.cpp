@@ -25,5 +25,5 @@ void VisualOdometry::BroadcastTf(const geometry_msgs::PoseWithCovarianceStamped:
     transform.setOrigin(cameraPosition);
     transform.setRotation(cameraOrientation);
 
-    m_broadcaster.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "odom", "base_link"));
+    m_broadcaster.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "odom", "camera_left"));
 }
