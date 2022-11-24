@@ -6,7 +6,7 @@
 
 #include <ros/ros.h>
 #include "../include/PoseEstimate.h"
-#include <sgtdv_msgs/CarState.h>
+#include <sgtdv_msgs/CarPose.h>
 //#include  IMU msg
 
 int main(int argc, char** argv)
@@ -16,7 +16,7 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "pose_estimate");
     ros::NodeHandle handle;
 
-    ros::Publisher publisher = handle.advertise<sgtdv_msgs::CarState>("pose_estimate", 1);
+    ros::Publisher publisher = handle.advertise<sgtdv_msgs::CarPose>("pose_estimate", 1);
 
     poseEstimate.SetPublisher(publisher);
 
