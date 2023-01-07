@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="rviz_config" default="$(find sensors_visualizator)/rviz/sensors_visualizator.rviz"/>
+    
+    <node pkg="sensors_visualizator" type="sensors_visualizator" name="sensorsVisualizator" output="screen"/>
+    <node pkg="rviz" type="rviz" name="sensorsVisualizator_rviz"  respawn="false"
+        args="-d $(arg rviz_config)" output="screen">
+    </node>
+    
+</launch>

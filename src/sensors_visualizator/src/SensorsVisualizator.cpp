@@ -9,7 +9,32 @@ SensorsVisualizator::SensorsVisualizator()
 {
     m_cameraMarkers.markers.reserve(20);
     m_lidarMarkers.markers.reserve(1000);
-    m_fusionMarker.points.reserve(20);
+    
+    m_fusionMarkers.markers.reserve(2);
+    visualization_msgs::Marker marker;
+    marker.type = marker.POINTS;
+    marker.action = marker.MODIFY;
+    marker.ns = std::string("fusion");
+    marker.lifetime = ros::Duration(0.2);
+    marker.scale.x = 0.1;
+    marker.scale.y = 0.1;
+    marker.color.a = 1.0;
+    marker.points.reserve(20);
+    m_fusionMarkers.markers.push_back(marker);
+
+#ifdef SIMPLE_FUSION
+    visualization_msgs::Marker simpleMarker;
+    simpleMarker.type = simpleMarker.POINTS;
+    simpleMarker.action = simpleMarker.MODIFY;
+    simpleMarker.ns = std::string("fusion_simple");
+    simpleMarker.lifetime = ros::Duration(0.2);
+    simpleMarker.scale.x = 0.1;
+    simpleMarker.scale.y = 0.1;
+    simpleMarker.color.a = 1.0;
+    simpleMarker.points.reserve(20);
+    m_fusionMarkers.markers.push_back(simpleMarker);
+#endif
+
 }
 
 SensorsVisualizator::~SensorsVisualizator()
@@ -19,7 +44,7 @@ SensorsVisualizator::~SensorsVisualizator()
 
 void SensorsVisualizator::DoCamera(const sgtdv_msgs::ConeArr::ConstPtr &msg)
 {
-    DeleteMarkers(m_cameraMarkers, m_cameraPublisher, m_cameraFrameId);
+    DeleteMarkers(m_cameraMarkers, m_cameraPublisher);
     m_cameraMarkers.markers.clear();
     
     for(int i = 0; i < msg->cones.size(); i++)
@@ -29,12 +54,11 @@ void SensorsVisualizator::DoCamera(const sgtdv_msgs::ConeArr::ConstPtr &msg)
         
         visualization_msgs::Marker marker;
         
-        marker.header.stamp = ros::Time();
-        marker.header.frame_id = m_cameraFrameId;
+        marker.header = msg->cones[i].coords.header;
         marker.type = marker.SPHERE;
         marker.action = marker.ADD;
         marker.id = i;
-        m_fusionMarker.lifetime = ros::Duration(0.5);
+        marker.lifetime = ros::Duration(0.5);
         marker.pose.position.x = msg->cones[i].coords.x;
         marker.pose.position.y = msg->cones[i].coords.y;
         marker.pose.position.z = 0;
@@ -85,18 +109,17 @@ void SensorsVisualizator::DoCamera(const sgtdv_msgs::ConeArr::ConstPtr &msg)
 
 void SensorsVisualizator::DoLidar(const sgtdv_msgs::Point2DArr::ConstPtr &msg)
 {
-    DeleteMarkers(m_lidarMarkers, m_lidarPublisher, m_lidarFrameId);
+    DeleteMarkers(m_lidarMarkers, m_lidarPublisher);
     m_lidarMarkers.markers.clear();
     visualization_msgs::Marker marker;
     
     for (int i = 0; i< msg->points.size(); i++)
     {
-        marker.header.stamp = ros::Time();
-        marker.header.frame_id = m_lidarFrameId;
+        marker.header = msg->points[i].header;
         marker.type = marker.CYLINDER;
         marker.action = marker.ADD;
         marker.id = i;
-        m_fusionMarker.lifetime = ros::Duration(0.5);
+        marker.lifetime = ros::Duration(0.5);
         marker.pose.position.x = msg->points[i].x;
         marker.pose.position.y = msg->points[i].y;
         marker.pose.position.z = 0.0;
@@ -107,7 +130,7 @@ void SensorsVisualizator::DoLidar(const sgtdv_msgs::Point2DArr::ConstPtr &msg)
         marker.scale.x = 0.1;
         marker.scale.y = 0.1;
         marker.scale.z = 0.1;
-        marker.color.a = 0.6;
+        marker.color.a = 0.7;
         marker.color.r = 1.0;
         marker.color.g = 0.0;
         marker.color.b = 0.0;
@@ -115,24 +138,19 @@ void SensorsVisualizator::DoLidar(const sgtdv_msgs::Point2DArr::ConstPtr &msg)
         m_lidarMarkers.markers.push_back(marker);
     }
 
-    m_lidarPublisher.publish(m_lidarMarkers);  
+    m_lidarPublisher.publish(m_lidarMarkers); 
 }
 
 void SensorsVisualizator::DoFusion(const sgtdv_msgs::ConeArr::ConstPtr &msg)
 {
-    m_fusionMarker.points.clear();
-    m_fusionMarker.colors.clear();
+    m_fusionMarkers.markers[0].points.clear();
+    m_fusionMarkers.markers[0].colors.clear();
     
-    m_fusionMarker.header.stamp = ros::Time();
-    m_fusionMarker.header.frame_id = m_fusionFrameId;
-    m_fusionMarker.type = m_fusionMarker.POINTS;
-    m_fusionMarker.action = m_fusionMarker.ADD;
-    m_fusionMarker.ns = "fusion_simple";
-    m_fusionMarker.lifetime = ros::Duration(0.5);
-    m_fusionMarker.scale.x = 0.1;
-    m_fusionMarker.scale.y = 0.1;
-    m_fusionMarker.color.a = 1.0;
-
+    if (msg->cones.size() > 0)
+    {
+        m_fusionMarkers.markers[0].header = msg->cones[0].coords.header;
+    }
+    
     geometry_msgs::Point point;
     std_msgs::ColorRGBA color;
 
@@ -172,20 +190,52 @@ void SensorsVisualizator::DoFusion(const sgtdv_msgs::ConeArr::ConstPtr &msg)
             color.r = color.g = color.b = 0;
         }
         
-        m_fusionMarker.points.push_back(point);
-        m_fusionMarker.colors.push_back(color);
+        m_fusionMarkers.markers[0].points.push_back(point);
+        m_fusionMarkers.markers[0].colors.push_back(color);
     }
     
-    m_fusionPublisher.publish(m_fusionMarker);  
+    m_fusionPublisher.publish(m_fusionMarkers);
 }
 
+#ifdef SIMPLE_FUSION
+    void SensorsVisualizator::DoSimpleFusion(const sgtdv_msgs::ConeArr::ConstPtr &msg)
+    {
+        m_fusionMarkers.markers[1].points.clear();
+        m_fusionMarkers.markers[1].colors.clear();
+
+        if (msg->cones.size() > 0)
+        {
+            m_fusionMarkers.markers[1].header = msg->cones[0].coords.header;
+        }
+        
+        geometry_msgs::Point point;
+        std_msgs::ColorRGBA color;
+
+        for(int i = 0; i < msg->cones.size(); i++)
+        {
+            point.x = msg->cones[i].coords.x;
+            point.y = msg->cones[i].coords.y;
+            point.z = 0.0;
+
+            color.a = 1.0;
+            color.r = 0.9;
+            color.g = 0.6;
+            color.b = 0.9;
+
+            m_fusionMarkers.markers[1].points.push_back(point);
+            m_fusionMarkers.markers[1].colors.push_back(color);
+        }
+
+        m_fusionPublisher.publish(m_fusionMarkers);
+    }
+#endif
+
 void SensorsVisualizator::DeleteMarkers(visualization_msgs::MarkerArray markerArray, 
-ros::Publisher publisher, std::string frameId)
+ros::Publisher publisher)
 {
     markerArray.markers.clear();
     visualization_msgs::Marker marker;
 
-    marker.header.frame_id = frameId;
     marker.id = 0;
     marker.action = marker.DELETEALL;
     markerArray.markers.push_back(marker);

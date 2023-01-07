@@ -23,12 +23,12 @@ void PoseEstimate::SetPublisher(ros::Publisher publisher)
     m_publisher = publisher;
 }
 
-void PoseEstimate::DoSlamState(const sgtdv_msgs::CarState::ConstPtr &msg)
+void PoseEstimate::DoSlamState(const sgtdv_msgs::CarPose::ConstPtr &msg)
 {
     m_currentState.position = msg->position;
     m_currentState.yaw = msg->yaw;
 
-    SendCarState();
+    SendCarPose();
 }
 
 void PoseEstimate::DoIMU()//imu msg)
@@ -36,12 +36,12 @@ void PoseEstimate::DoIMU()//imu msg)
     //m_currentState.position +=
     //m_currentState.yaw = 
 
-    SendCarState();
+    SendCarPose();
 }
 
-void PoseEstimate::SendCarState()
+void PoseEstimate::SendCarPose()
 {
-    sgtdv_msgs::CarStatePtr msg (new sgtdv_msgs::CarState);
+    sgtdv_msgs::CarPosePtr msg (new sgtdv_msgs::CarPose);
 
     msg->position = m_currentState.position;
     msg->yaw = m_currentState.yaw;
