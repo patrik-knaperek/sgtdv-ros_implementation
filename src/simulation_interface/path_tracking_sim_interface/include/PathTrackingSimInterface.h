@@ -14,6 +14,7 @@
 // SGT-DV
 #include <sgtdv_msgs/Control.h>
 #include <sgtdv_msgs/CarPose.h>
+#include <sgtdv_msgs/CarVel.h>
 #include <sgtdv_msgs/Point2DArr.h>
 
 class PathTrackingSimInterface
@@ -23,17 +24,18 @@ class PathTrackingSimInterface
         ~PathTrackingSimInterface();
 
         // Setters
-        void setPublishers(ros::Publisher cmdPub, ros::Publisher trajectoryPub, ros::Publisher posePub)
+        void setPublishers(ros::Publisher cmdPub, ros::Publisher trajectoryPub, ros::Publisher posePub, ros::Publisher velPub)
         {
             m_cmdPublisher = cmdPub;
             m_trajectoryPublisher = trajectoryPub;
             m_posePublisher = posePub;
+            m_velocityPublisher = velPub;
         };
 
         // Callbacks
         void DoCmd(const sgtdv_msgs::Control::ConstPtr &msg);
         void DoTrajectory(const geometry_msgs::PolygonStamped::ConstPtr &msg);
-        void DoPose(const fsd_common_msgs::CarState::ConstPtr &msg);
+        void DoState(const fsd_common_msgs::CarState::ConstPtr &msg);
 
     private:
         // SGT-DV --> FSSIM
@@ -42,4 +44,5 @@ class PathTrackingSimInterface
         // FSSIM --> SGT-DV
         ros::Publisher m_trajectoryPublisher;
         ros::Publisher m_posePublisher;
+        ros::Publisher m_velocityPublisher;
 };

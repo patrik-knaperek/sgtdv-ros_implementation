@@ -1,4 +1,5 @@
 #include <sgtdv_msgs/CarPose.h>
+#include <sgtdv_msgs/CarVel.h>
 #include <sgtdv_msgs/ColoredConeArr.h>
 #include <sgtdv_msgs/Cone.h>
 #include <sgtdv_msgs/ConeArr.h>

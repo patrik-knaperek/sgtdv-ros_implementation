@@ -54,6 +54,7 @@ add_message_files(
   ConeWithCovArr.msg
   Cone.msg
   CarPose.msg
+  CarVel.msg
   ConeArr.msg
   Point2DArr.msg
   PathPlanningMsg.msg

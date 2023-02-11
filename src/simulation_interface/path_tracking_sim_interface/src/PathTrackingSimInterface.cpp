@@ -44,7 +44,7 @@ void PathTrackingSimInterface::DoTrajectory(const geometry_msgs::PolygonStamped:
 
     m_trajectoryPublisher.publish(trajectory);
 }
-void PathTrackingSimInterface::DoPose(const fsd_common_msgs::CarState::ConstPtr &msg)
+void PathTrackingSimInterface::DoState(const fsd_common_msgs::CarState::ConstPtr &msg)
 {
     sgtdv_msgs::CarPosePtr carPose(new sgtdv_msgs::CarPose);
 
@@ -54,4 +54,11 @@ void PathTrackingSimInterface::DoPose(const fsd_common_msgs::CarState::ConstPtr 
     carPose->yaw = msg->car_state.theta;
 
     m_posePublisher.publish(carPose);
+
+    sgtdv_msgs::CarVelPtr carVel(new sgtdv_msgs::CarVel);
+
+    carVel->speed = msg->car_state_dt.car_state_dt.x;
+    carVel->yawRate = msg->car_state_dt.car_state_dt.theta;
+
+    m_velocityPublisher.publish(carVel);
 }
