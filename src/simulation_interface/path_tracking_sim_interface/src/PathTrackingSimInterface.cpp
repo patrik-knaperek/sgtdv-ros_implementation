@@ -21,8 +21,6 @@ void PathTrackingSimInterface::DoCmd(const sgtdv_msgs::Control::ConstPtr &msg)
 
     cmd->header.stamp = ros::Time::now();
     cmd->steering_angle.data = msg->steeringAngle;
-    //std::cout << "sgt command: " << cmd->steering_angle.data << std::endl;
-    //std::cout << "fsd command: " << msg->steeringAngle << std::endl;
     cmd->throttle.data = msg->speed / 100.f;
 
     m_cmdPublisher.publish(cmd);
