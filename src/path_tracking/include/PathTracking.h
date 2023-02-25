@@ -3,7 +3,6 @@
 //Authors: Juraj Krasňanský
 /*****************************************************/
 
-
 #include <ros/ros.h>
 #include <chrono>
 #include <sgtdv_msgs/PathTrackingMsg.h>
@@ -11,18 +10,16 @@
 #include "../include/TrackingAlgorithms.h"
 #include <sgtdv_msgs/Control.h>
 
-constexpr float FPS = 60.f;
-constexpr float TIME_PER_FRAME = 1.f / FPS;
-
 class PathTracking
 {
 public:
-    PathTracking();
+    PathTracking(ros::NodeHandle &handle);
     ~PathTracking();
 
-    void SetPublisher(ros::Publisher publisher);
+    void LoadParams(ros::NodeHandle &handle);
+    void SetPublishers(ros::Publisher cmdPub, ros::Publisher targetPub);
     void Do(const PathTrackingMsg &msg);
-    void FreshTrajectory();
+    //void FreshTrajectory();
     
 private:
     ros::Publisher m_publisher;

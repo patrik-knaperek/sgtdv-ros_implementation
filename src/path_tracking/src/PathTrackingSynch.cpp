@@ -1,15 +1,15 @@
 /*****************************************************/
 //Organization: Stuba Green Team
-//Authors: Juraj Krasňanský
+//Authors: Juraj Krasňanský, Patrik Knaperek
 /*****************************************************/
 
 
 #include "../include/PathTrackingSynch.h"
 
-PathTrackingSynch::PathTrackingSynch()
+PathTrackingSynch::PathTrackingSynch(ros::NodeHandle &handle) :
+    m_pathTracking(handle)
 {
-    m_pathTrackingMsg.speed = CONST_SPEED;
-    m_pathTrackingMsg.yawRate = CONST_YAW_RATE;
+    m_trajectoryReady = m_poseReady = m_velocityReady = false;
 }
 
 PathTrackingSynch::~PathTrackingSynch()
@@ -17,20 +17,28 @@ PathTrackingSynch::~PathTrackingSynch()
 
 }
 
-void PathTrackingSynch::SetPublisher(ros::Publisher publisher)
+void PathTrackingSynch::SetPublishers(ros::Publisher cmdPub, ros::Publisher targetPub)
 {
-    m_pathTracking.SetPublisher(publisher);
+    m_pathTracking.SetPublishers(cmdPub, targetPub);
 }
 
 void PathTrackingSynch::DoPlannedTrajectory(const sgtdv_msgs::Point2DArr::ConstPtr &msg)
 {
     m_pathTrackingMsg.trajectory = msg;
-    m_pathTracking.FreshTrajectory();
+    //m_pathTracking.FreshTrajectory();
+    m_trajectoryReady = true;
 }
 
 void PathTrackingSynch::DoPoseEstimate(const sgtdv_msgs::CarPose::ConstPtr &msg)
 {
     m_pathTrackingMsg.carPose = msg;
+    m_poseReady = true;
+}
+
+void PathTrackingSynch::DoVelocityEstimate(const sgtdv_msgs::CarVel::ConstPtr &msg)
+{
+    m_pathTrackingMsg.carVel = msg;
+    m_velocityReady = true;
 }
 
 void PathTrackingSynch::Do()
@@ -38,6 +46,8 @@ void PathTrackingSynch::Do()
     while (ros::ok())
     {        
         ros::spinOnce();
+
+        if(!m_trajectoryReady || !m_poseReady || !m_velocityReady) continue;
         
         auto start = std::chrono::steady_clock::now();
 
