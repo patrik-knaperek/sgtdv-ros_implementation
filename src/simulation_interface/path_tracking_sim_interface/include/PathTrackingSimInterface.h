@@ -21,10 +21,11 @@ class PathTrackingSimInterface
 {
     public:
         PathTrackingSimInterface();
-        ~PathTrackingSimInterface();
+        ~PathTrackingSimInterface() = default;
 
         // Setters
-        void setPublishers(ros::Publisher cmdPub, ros::Publisher trajectoryPub, ros::Publisher posePub, ros::Publisher velPub)
+        void setPublishers(const ros::Publisher &cmdPub, const ros::Publisher &trajectoryPub, 
+                           const ros::Publisher &posePub, const ros::Publisher &velPub)
         {
             m_cmdPublisher = cmdPub;
             m_trajectoryPublisher = trajectoryPub;
@@ -33,9 +34,9 @@ class PathTrackingSimInterface
         };
 
         // Callbacks
-        void DoCmd(const sgtdv_msgs::Control::ConstPtr &msg);
-        void DoTrajectory(const geometry_msgs::PolygonStamped::ConstPtr &msg);
-        void DoState(const fsd_common_msgs::CarState::ConstPtr &msg);
+        void DoCmd(const sgtdv_msgs::Control::ConstPtr &msg) const;
+        void DoTrajectory(const geometry_msgs::PolygonStamped::ConstPtr &msg) const;
+        void DoState(const fsd_common_msgs::CarState::ConstPtr &msg) const;
 
     private:
         // SGT-DV --> FSSIM
