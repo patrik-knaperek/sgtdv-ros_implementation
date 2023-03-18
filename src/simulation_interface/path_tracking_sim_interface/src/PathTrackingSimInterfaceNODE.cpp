@@ -22,7 +22,10 @@ int main(int argc, char** argv)
     ros::Subscriber trajectorySub = handle.subscribe("control/pure_pursuit/center_line", 1, &PathTrackingSimInterface::DoTrajectory, &simInterface);
     ros::Subscriber poseSub = handle.subscribe("estimation/slam/state", 1, &PathTrackingSimInterface::DoState, &simInterface);
 
-    ros::spin();
+    while (ros::ok())
+    {
+        ros::spinOnce();
+    }
 
     return 0;
 }

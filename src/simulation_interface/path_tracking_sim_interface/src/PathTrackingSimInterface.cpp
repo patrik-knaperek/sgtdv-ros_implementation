@@ -10,12 +10,7 @@ PathTrackingSimInterface::PathTrackingSimInterface()
 
 }
 
-PathTrackingSimInterface::~PathTrackingSimInterface()
-{
-
-}
-
-void PathTrackingSimInterface::DoCmd(const sgtdv_msgs::Control::ConstPtr &msg)
+void PathTrackingSimInterface::DoCmd(const sgtdv_msgs::Control::ConstPtr &msg) const
 {
     fsd_common_msgs::ControlCommandPtr cmd(new fsd_common_msgs::ControlCommand);
 
@@ -25,7 +20,7 @@ void PathTrackingSimInterface::DoCmd(const sgtdv_msgs::Control::ConstPtr &msg)
 
     m_cmdPublisher.publish(cmd);
 }
-void PathTrackingSimInterface::DoTrajectory(const geometry_msgs::PolygonStamped::ConstPtr &msg)
+void PathTrackingSimInterface::DoTrajectory(const geometry_msgs::PolygonStamped::ConstPtr &msg) const
 {
     sgtdv_msgs::Point2DArrPtr trajectory(new sgtdv_msgs::Point2DArr);
     trajectory->points.reserve(msg->polygon.points.size());
@@ -42,7 +37,7 @@ void PathTrackingSimInterface::DoTrajectory(const geometry_msgs::PolygonStamped:
 
     m_trajectoryPublisher.publish(trajectory);
 }
-void PathTrackingSimInterface::DoState(const fsd_common_msgs::CarState::ConstPtr &msg)
+void PathTrackingSimInterface::DoState(const fsd_common_msgs::CarState::ConstPtr &msg) const
 {
     sgtdv_msgs::CarPosePtr carPose(new sgtdv_msgs::CarPose);
 
