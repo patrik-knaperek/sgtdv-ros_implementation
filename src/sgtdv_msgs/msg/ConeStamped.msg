@@ -1,4 +1,4 @@
-Point2D coords
+Point2DStamped coords
 
 # color values:
 # 'y': yellow cone
