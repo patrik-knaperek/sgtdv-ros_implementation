@@ -6,14 +6,19 @@
 #include "../include/SLAMSimInterface.h"
 
 SLAMSimInterface::SLAMSimInterface()
+: m_mapReady(false)
 {
-
+    
 }
 
-void SLAMSimInterface::DoMap(const fsd_common_msgs::Map::ConstPtr &msg) const
+void SLAMSimInterface::DoMap(const fsd_common_msgs::Map::ConstPtr &msg)
 {
-    sgtdv_msgs::ConeArrPtr map(new sgtdv_msgs::ConeArr);
-    map->cones.reserve(msg->cone_blue.size() + msg->cone_yellow.size() + msg->cone_orange.size());
+    if(!m_mapReady)
+    {
+        m_mapReady = true;
+    }
+
+    m_map.cones.reserve(msg->cone_blue.size() + msg->cone_yellow.size() + msg->cone_orange.size());
     
     for (auto &i : msg->cone_blue)
     {
@@ -21,7 +26,7 @@ void SLAMSimInterface::DoMap(const fsd_common_msgs::Map::ConstPtr &msg) const
         cone.coords.x = i.position.x;
         cone.coords.y = i.position.y;
         cone.color = 'b';
-        map->cones.emplace_back(cone);
+        m_map.cones.emplace_back(cone);
     }
 
     for (auto &i : msg->cone_yellow)
@@ -30,7 +35,7 @@ void SLAMSimInterface::DoMap(const fsd_common_msgs::Map::ConstPtr &msg) const
         cone.coords.x = i.position.x;
         cone.coords.y = i.position.y;
         cone.color = 'y';
-        map->cones.emplace_back(cone);
+        m_map.cones.emplace_back(cone);
     }
 
     for (auto &i : msg->cone_orange)
@@ -39,17 +44,17 @@ void SLAMSimInterface::DoMap(const fsd_common_msgs::Map::ConstPtr &msg) const
         cone.coords.x = i.position.x;
         cone.coords.y = i.position.y;
         cone.color = 'g';
-        map->cones.emplace_back(cone);
+        m_map.cones.emplace_back(cone);
     }
-    m_mapPublisher.publish(map);
+    
 }
 void SLAMSimInterface::DoState(const fsd_common_msgs::CarState::ConstPtr &msg) const
 {
-    sgtdv_msgs::CarPosePtr carPose(new sgtdv_msgs::CarPose);
+    sgtdv_msgs::CarPose carPose;
 
-    carPose->position.x = msg->car_state.x;
-    carPose->position.y = msg->car_state.y;
-    carPose->yaw = msg->car_state.theta;
+    carPose.position.x = msg->car_state.x;
+    carPose.position.y = msg->car_state.y;
+    carPose.yaw = msg->car_state.theta;
 
     m_posePublisher.publish(carPose);
 
@@ -59,4 +64,10 @@ void SLAMSimInterface::DoState(const fsd_common_msgs::CarState::ConstPtr &msg) c
     carVel->yawRate = msg->car_state_dt.car_state_dt.theta;
 
     m_velocityPublisher.publish(carVel);*/
+}
+
+void SLAMSimInterface::PublishMap()
+{
+    if (m_mapReady)
+        m_mapPublisher.publish(m_map);
 }

@@ -33,8 +33,10 @@ class SLAMSimInterface
         };
 
         // Callbacks
-        void DoMap(const fsd_common_msgs::Map::ConstPtr &msg) const;
+        void DoMap(const fsd_common_msgs::Map::ConstPtr &msg);
         void DoState(const fsd_common_msgs::CarState::ConstPtr &msg) const;
+
+        void PublishMap();
 
     private:
         // SGT-DV --> FSSIM
@@ -43,4 +45,7 @@ class SLAMSimInterface
         ros::Publisher m_mapPublisher;
         ros::Publisher m_posePublisher;
         //ros::Publisher m_velocityPublisher;
+
+        sgtdv_msgs::ConeArr m_map;
+        bool m_mapReady;
 };

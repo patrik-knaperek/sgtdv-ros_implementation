@@ -19,10 +19,13 @@ int main(int argc, char** argv)
 
     ros::Subscriber mapSub = handle.subscribe("estimation/slam/map", 1, &SLAMSimInterface::DoMap, &simInterface);
     ros::Subscriber poseSub = handle.subscribe("estimation/slam/state", 1, &SLAMSimInterface::DoState, &simInterface);
-
+    ROS_INFO("here");
+    ros::Rate rate(5);
     while (ros::ok())
     {
         ros::spinOnce();
+        simInterface.PublishMap();
+        rate.sleep();
     }
 
     return 0;
