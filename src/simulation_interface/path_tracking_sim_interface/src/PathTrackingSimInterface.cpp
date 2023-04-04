@@ -28,7 +28,7 @@ void PathTrackingSimInterface::DoTrajectory(const geometry_msgs::PolygonStamped:
     for(auto msgPoint : msg->polygon.points)
     {
         sgtdv_msgs::Point2D point;
-        point.header = msg->header;
+        //point.header = msg->header;
         point.x = msgPoint.x;
         point.y = msgPoint.y;
 
@@ -41,7 +41,7 @@ void PathTrackingSimInterface::DoState(const fsd_common_msgs::CarState::ConstPtr
 {
     sgtdv_msgs::CarPosePtr carPose(new sgtdv_msgs::CarPose);
 
-    carPose->position.header = msg->header;
+    //carPose->position.header = msg->header;
     carPose->position.x = msg->car_state.x;
     carPose->position.y = msg->car_state.y;
     carPose->yaw = msg->car_state.theta;
