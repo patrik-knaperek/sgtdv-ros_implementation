@@ -7,6 +7,7 @@
 
 // ROS
 #include <ros/ros.h>
+#include <std_msgs/Empty.h>
 
 // AMZ FSSIM
 #include <fsd_common_msgs/Map.h>
@@ -20,32 +21,42 @@
 
 class SLAMSimInterface
 {
-    public:
+   public:
         SLAMSimInterface();
         ~SLAMSimInterface() = default;
 
         // Setters
-        void setPublishers(const ros::Publisher &mapPub, const ros::Publisher &posePub/*, const ros::Publisher &velPub*/)
+        void setPublishers(const ros::Publisher &mapPub, const ros::Publisher &posePub
+                            , const ros::Publisher &loopClosePub/*, const ros::Publisher &velPub*/)
         {
             m_mapPublisher = mapPub;
             m_posePublisher = posePub;
+            m_loopClosePub = loopClosePub;
             //m_velocityPublisher = velPub;
         };
 
         // Callbacks
         void DoMap(const fsd_common_msgs::Map::ConstPtr &msg);
-        void DoState(const fsd_common_msgs::CarState::ConstPtr &msg) const;
+        void DoState(const fsd_common_msgs::CarState::ConstPtr &msg);
 
         void PublishMap();
 
     private:
+        static constexpr float LOOK_AHEAD_DISTANCE = 15.0;
+
         // SGT-DV --> FSSIM
 
         // FSSIM --> SGT-DV
-        ros::Publisher m_mapPublisher;
-        ros::Publisher m_posePublisher;
-        //ros::Publisher m_velocityPublisher;
+        void AddToMap(const fsd_common_msgs::Cone &cone);
+        int FindLookAheadConeIdx(std::vector<fsd_common_msgs::Cone> cones);
+        void ActualizeMap();
+        void LoopClosure();
+        std::vector<fsd_common_msgs::Cone> m_conesBlue, m_conesYellow;
+        ros::Publisher m_mapPublisher, m_posePublisher, m_loopClosePub/*, m_velocityPublisher*/;
 
         sgtdv_msgs::ConeArr m_map;
-        bool m_mapReady;
+        sgtdv_msgs::CarPose m_carPose;
+
+        int m_conesBlueCount, m_conesYellowCount;
+        bool m_mapReady, m_loopClosure;
 };
