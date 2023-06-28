@@ -9,7 +9,7 @@
 
 #include <sgtdv_msgs/ConeArr.h>
 #include <sgtdv_msgs/Point2DArr.h>
-#include "../../SGT_Macros.h"
+#include "../../../SGT_Macros.h"
 #include <sgtdv_msgs/DebugState.h>
 
 class SimInterface
