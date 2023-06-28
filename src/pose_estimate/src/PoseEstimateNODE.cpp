@@ -20,8 +20,9 @@ int main(int argc, char** argv)
 
     poseEstimate.SetPublisher(publisher);
 
-    ros::Subscriber cameraSub = handle.subscribe("slam_pose", 1, &PoseEstimate::DoSlamState, &poseEstimate);
-    //ros::Subscriber lidarSub = handle.subscribe("imu", 1, &PoseEstimate::DoIMU, &poseEstimate);
+    ros::Subscriber slamSub = handle.subscribe("slam_pose", 1, &PoseEstimate::DoSlamState, &poseEstimate);
+    //ros::Subscriber imuSub = handle.subscribe("imu", 1, &PoseEstimate::DoIMU, &poseEstimate);
+    ros::Subscriber cameraSub = handle.subscribe("/camera_pose", 1, &PoseEstimate::DoCameraPose, &poseEstimate);
 
     ros::spin();
 
