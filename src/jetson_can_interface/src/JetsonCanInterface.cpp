@@ -41,6 +41,7 @@ void JetsonCanInterface::Do(const sgtdv_msgs::Control::ConstPtr &msg)
 
     while(bytesWritten != CAN_BYTES_TO_SEND)
     {
+        // https://pubs.opengroup.org/onlinepubs/7908799/xsh/write.html
         bytesWritten += write(m_socket, data + bytesWritten - 1, CAN_BYTES_TO_SEND - bytesWritten);
     }  
 }

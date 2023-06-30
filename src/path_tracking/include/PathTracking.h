@@ -3,30 +3,38 @@
 //Authors: Juraj Krasňanský
 /*****************************************************/
 
-
 #include <ros/ros.h>
 #include <chrono>
 #include <sgtdv_msgs/PathTrackingMsg.h>
 #include "../include/Messages.h"
 #include "../include/TrackingAlgorithms.h"
 #include <sgtdv_msgs/Control.h>
-
-constexpr float FPS = 60.f;
-constexpr float TIME_PER_FRAME = 1.f / FPS;
+#include <geometry_msgs/PoseStamped.h>
 
 class PathTracking
 {
 public:
-    PathTracking();
-    ~PathTracking();
+    PathTracking(const ros::NodeHandle &handle);
+    ~PathTracking() = default;
 
-    void SetPublisher(ros::Publisher publisher);
+    void LoadParams(const ros::NodeHandle &handle) const;
+    void SetCmdPublisher(const ros::Publisher &cmdPub)
+    {
+        m_cmdPublisher = cmdPub;
+    };
+    void SetVisualizationPublishers(const ros::Publisher &targetPub, const ros::Publisher &steeringPosePub)
+    {
+        m_algorithm->SetVisualizationPublishers(targetPub, steeringPosePub);
+    };
     void Do(const PathTrackingMsg &msg);
-    void FreshTrajectory();
+    void StopVehicle();
+    void StartVehicle();
     
 private:
-    ros::Publisher m_publisher;
-    TrackingAlgorithm *m_algorithm = nullptr;
+    float GetParam(const ros::NodeHandle &handle, const std::string &name) const;
+    ros::Publisher m_cmdPublisher;
+    TrackingAlgorithm *m_algorithm;
+    bool m_stopped;
 
     void HandleAlgorithmResult(sgtdv_msgs::ControlPtr &msg, const Control &result);
 };

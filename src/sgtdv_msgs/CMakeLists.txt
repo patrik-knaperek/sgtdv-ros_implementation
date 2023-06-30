@@ -50,17 +50,22 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   Point2D.msg
+  Point2DArr.msg
+  Point2DStamped.msg
+  Point2DStampedArr.msg
+  Cone.msg
+  ConeArr.msg
+  ConeStamped.msg
+  ConeStampedArr.msg
   ConeWithCov.msg
   ConeWithCovArr.msg
-  Cone.msg
+  ColoredConeArr.msg
   CarPose.msg
-  ConeArr.msg
-  Point2DArr.msg
+  CarVel.msg
   PathPlanningMsg.msg
   PathTrackingMsg.msg
   Control.msg
   FusionMsg.msg
-  ColoredConeArr.msg
   SLAMMsg.msg
   DebugState.msg
 )

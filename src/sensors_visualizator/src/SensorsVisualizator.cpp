@@ -42,7 +42,7 @@ SensorsVisualizator::~SensorsVisualizator()
 
 }
 
-void SensorsVisualizator::DoCamera(const sgtdv_msgs::ConeArr::ConstPtr &msg)
+void SensorsVisualizator::DoCamera(const sgtdv_msgs::ConeStampedArr::ConstPtr &msg)
 {
     DeleteMarkers(m_cameraMarkers, m_cameraPublisher);
     m_cameraMarkers.markers.clear();
@@ -107,7 +107,7 @@ void SensorsVisualizator::DoCamera(const sgtdv_msgs::ConeArr::ConstPtr &msg)
     m_cameraPublisher.publish(m_cameraMarkers);  
 }
 
-void SensorsVisualizator::DoLidar(const sgtdv_msgs::Point2DArr::ConstPtr &msg)
+void SensorsVisualizator::DoLidar(const sgtdv_msgs::Point2DStampedArr::ConstPtr &msg)
 {
     DeleteMarkers(m_lidarMarkers, m_lidarPublisher);
     m_lidarMarkers.markers.clear();
@@ -141,7 +141,7 @@ void SensorsVisualizator::DoLidar(const sgtdv_msgs::Point2DArr::ConstPtr &msg)
     m_lidarPublisher.publish(m_lidarMarkers); 
 }
 
-void SensorsVisualizator::DoFusion(const sgtdv_msgs::ConeArr::ConstPtr &msg)
+void SensorsVisualizator::DoFusion(const sgtdv_msgs::ConeStampedArr::ConstPtr &msg)
 {
     m_fusionMarkers.markers[0].points.clear();
     m_fusionMarkers.markers[0].colors.clear();
@@ -198,7 +198,7 @@ void SensorsVisualizator::DoFusion(const sgtdv_msgs::ConeArr::ConstPtr &msg)
 }
 
 #ifdef SIMPLE_FUSION
-    void SensorsVisualizator::DoSimpleFusion(const sgtdv_msgs::ConeArr::ConstPtr &msg)
+    void SensorsVisualizator::DoSimpleFusion(const sgtdv_msgs::ConeStampedArr::ConstPtr &msg)
     {
         m_fusionMarkers.markers[1].points.clear();
         m_fusionMarkers.markers[1].colors.clear();

@@ -7,9 +7,9 @@
 #include <ros/ros.h>
 #include <sensor_msgs/PointCloud2.h>
 
-#include <sgtdv_msgs/ConeArr.h>
-#include <sgtdv_msgs/Point2DArr.h>
-#include "../../SGT_Macros.h"
+#include <sgtdv_msgs/ConeStampedArr.h>
+#include <sgtdv_msgs/Point2DStampedArr.h>
+#include "../../../SGT_Macros.h"
 #include <sgtdv_msgs/DebugState.h>
 
 class SimInterface
