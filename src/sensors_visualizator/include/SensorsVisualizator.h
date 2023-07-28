@@ -5,8 +5,8 @@
 
 #include <ros/ros.h>
 #include <visualization_msgs/MarkerArray.h>
-#include <sgtdv_msgs/ConeArr.h>
-#include <sgtdv_msgs/Point2DArr.h>
+#include <sgtdv_msgs/ConeStampedArr.h>
+#include <sgtdv_msgs/Point2DStampedArr.h>
 #include <sgtdv_msgs/FusionMsg.h>
 #include "../../SGT_Macros.h"
 
@@ -25,14 +25,14 @@ class SensorsVisualizator
         };
         
         // Callbacks
-        void DoCamera(const sgtdv_msgs::ConeArr::ConstPtr &msg);
-        void DoLidar(const sgtdv_msgs::Point2DArr::ConstPtr &msg);
-        void DoFusion(const sgtdv_msgs::ConeArr::ConstPtr &msg);
+        void DoCamera(const sgtdv_msgs::ConeStampedArr::ConstPtr &msg);
+        void DoLidar(const sgtdv_msgs::Point2DStampedArr::ConstPtr &msg);
+        void DoFusion(const sgtdv_msgs::ConeStampedArr::ConstPtr &msg);
         void DeleteMarkers(visualization_msgs::MarkerArray markerArray,
                         ros::Publisher publisher);
         
     #ifdef SIMPLE_FUSION
-        void DoSimpleFusion(const sgtdv_msgs::ConeArr::ConstPtr &msg);
+        void DoSimpleFusion(const sgtdv_msgs::ConeStampedArr::ConstPtr &msg);
     #endif
 
     private:

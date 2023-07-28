@@ -25,7 +25,7 @@ void SimInterface::DoLidar(const sensor_msgs::PointCloud2::ConstPtr &msg)
 #endif    
     
     int pointsCount = msg->width;
-    sgtdv_msgs::Point2DArrPtr lidarCones(new sgtdv_msgs::Point2DArr);
+    sgtdv_msgs::Point2DStampedArrPtr lidarCones(new sgtdv_msgs::Point2DStampedArr);
     lidarCones->points.reserve(pointsCount);
 
     float const *temp;
@@ -33,7 +33,7 @@ void SimInterface::DoLidar(const sensor_msgs::PointCloud2::ConstPtr &msg)
     for(int i = 0; i < pointsCount; i++)
     {
         temp = reinterpret_cast<const float*>(&msg->data[i*msg->point_step]);
-        sgtdv_msgs::Point2D cone = sgtdv_msgs::Point2D();
+        sgtdv_msgs::Point2DStamped cone = sgtdv_msgs::Point2DStamped();
 
         cone.header = msg->header;
         cone.x = *temp;
@@ -60,7 +60,7 @@ void SimInterface::DoCamera(const sensor_msgs::PointCloud2::ConstPtr &msg)
 #endif
     
     int conesCount = msg->width;
-    sgtdv_msgs::ConeArrPtr cameraCones(new sgtdv_msgs::ConeArr);
+    sgtdv_msgs::ConeStampedArrPtr cameraCones(new sgtdv_msgs::ConeStampedArr);
     cameraCones->cones.reserve(conesCount);
     
     float const *temp;
@@ -68,7 +68,7 @@ void SimInterface::DoCamera(const sensor_msgs::PointCloud2::ConstPtr &msg)
     for(int i = 0; i < conesCount; i++)
     {
         temp = reinterpret_cast<const float*>(&msg->data[i*msg->point_step]);
-        sgtdv_msgs::Cone cone;
+        sgtdv_msgs::ConeStamped cone;
 
         cone.coords.header = msg->header;
         cone.coords.x = *temp;

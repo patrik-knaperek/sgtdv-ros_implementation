@@ -12,8 +12,8 @@ int main(int argc, char** argv)
     
     SimInterface simInterface;
 
-    ros::Publisher lidarPub = handle.advertise<sgtdv_msgs::Point2DArr>("lidar_cones", 1);
-    ros::Publisher cameraPub = handle.advertise<sgtdv_msgs::ConeArr>("camera_cones", 1);
+    ros::Publisher lidarPub = handle.advertise<sgtdv_msgs::Point2DStampedArr>("lidar_cones", 1);
+    ros::Publisher cameraPub = handle.advertise<sgtdv_msgs::ConeStampedArr>("camera_cones", 1);
     simInterface.setPublishers(cameraPub, lidarPub);
 
 #ifdef SGT_DEBUG_STATE

@@ -8,7 +8,8 @@
 
 # IDE - VSCode
 .vscode
-src/.vscode
+src/.vscode\
+!.vscode/extensions.json
 
 # ROS
 .catkin_tools/
