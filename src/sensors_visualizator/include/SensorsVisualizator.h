@@ -32,7 +32,7 @@ class SensorsVisualizator
                         ros::Publisher publisher);
         
     #ifdef SIMPLE_FUSION
-        void DoSimpleFusion(const sgtdv_msgs::ConeArr::ConstPtr &msg);
+        void DoSimpleFusion(const sgtdv_msgs::ConeStampedArr::ConstPtr &msg);
     #endif
 
     private:
