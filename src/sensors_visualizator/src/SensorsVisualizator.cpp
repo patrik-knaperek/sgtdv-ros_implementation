@@ -156,6 +156,9 @@ void SensorsVisualizator::DoFusion(const sgtdv_msgs::ConeStampedArr::ConstPtr &m
 
     for(int i = 0; i < msg->cones.size(); i++)
     {
+        if (std::isnan(msg->cones[i].coords.x) || std::isnan(msg->cones[i].coords.y))
+            continue;
+
         point.x = msg->cones[i].coords.x;
         point.y = msg->cones[i].coords.y;
         point.z = 0.0;
