@@ -20,9 +20,9 @@ int main(int argc, char** argv)
 
     PoseEstimate poseEstimate(posePublisher, velocityPublisher);
 
-    ros::Subscriber slamSub = handle.subscribe("slam_pose", 1, &PoseEstimate::DoSlamState, &poseEstimate);
+    // ros::Subscriber slamSub = handle.subscribe("slam_pose", 1, &PoseEstimate::DoSlamState, &poseEstimate);
     //ros::Subscriber imuSub = handle.subscribe("imu", 1, &PoseEstimate::DoIMU, &poseEstimate);
-    ros::Subscriber cameraSub = handle.subscribe("camera_pose", 1, &PoseEstimate::DoCameraPose, &poseEstimate);
+    // ros::Subscriber cameraSub = handle.subscribe("camera_pose", 1, &PoseEstimate::DoCameraPose, &poseEstimate);
     ros::Subscriber odomSub = handle.subscribe("odometry/filtered", 1, &PoseEstimate::DoOdometry, &poseEstimate);
 
     ros::spin();

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+    <include file="$(find fusion)/launch/fusion_rc.launch"/>
+    <include file="$(find mapper)/launch/mapper.launch"/>
+    <include file="$(find path_planning)/launch/path_planning_rc.launch"/>
+    <include file="$(find path_tracking)/launch/path_tracking_rc.launch"/>
+</launch>
