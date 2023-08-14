@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(sensors_visualizator)
+project(visualizator)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -11,6 +11,9 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   sgtdv_msgs
   std_msgs
+  roslib
+  tf
+  tf_conversions
 )
 
 ## System dependencies are found with CMake's conventions
@@ -133,7 +136,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME} src/SensorsVisualizator.cpp src/SensorsVisualizatorNODE.cpp)
+add_executable(${PROJECT_NAME} src/Visualizator.cpp src/VisualizatorNODE.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
