@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+    <launch>
+        <include file="$(find path_tracking)/launch/path_tracking_sim.launch"/>
+        <include file="$(find mapper)/launch/mapper.launch"/>
+        <include file="$(find fusion)/launch/fusion_sim.launch"/>
+        <include file="$(find path_planning)/launch/path_planning_sim.launch"/>
+        <include file="$(find visualizator)/launch/visualizator_sim.launch"/>
+    </launch>
