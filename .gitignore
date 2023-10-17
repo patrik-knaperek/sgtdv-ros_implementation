@@ -5,6 +5,8 @@
 .c9/
 .settings/
 *.sublime-workspace
+.cache
+.clangd
 
 # IDE - VSCode
 .vscode
