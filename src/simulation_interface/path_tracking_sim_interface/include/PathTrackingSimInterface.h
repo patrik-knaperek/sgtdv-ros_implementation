@@ -10,6 +10,7 @@
 // AMZ FSSIM
 #include <fsd_common_msgs/ControlCommand.h>
 #include <fsd_common_msgs/CarState.h>
+#include <fsd_common_msgs/CarStateDt.h>
 
 // SGT-DV
 #include <sgtdv_msgs/Control.h>
@@ -36,7 +37,8 @@ class PathTrackingSimInterface
         // Callbacks
         void DoCmd(const sgtdv_msgs::Control::ConstPtr &msg) const;
         void DoTrajectory(const geometry_msgs::PolygonStamped::ConstPtr &msg) const;
-        void DoState(const fsd_common_msgs::CarState::ConstPtr &msg) const;
+        void DoPose(const fsd_common_msgs::CarState::ConstPtr &msg) const;
+        void DoVelocity(const fsd_common_msgs::CarStateDt::ConstPtr &msg) const;
 
     private:
         // SGT-DV --> FSSIM

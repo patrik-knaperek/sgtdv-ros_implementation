@@ -18,7 +18,8 @@ ___
 
 ### Topic conversions
 * `/control/pure_pursuit/center_line [geometry_msgs::PolygonStamped] → pathplanning_trajectory [sgtdv_msgs::Point2DArr]`
-* `/estimation/slam/state [fsd_common_msgs::CarState] → pose_estimate [sgtdv_msgs::CarPose], velocity_estimate [sgtdv_msgs::CarVel]`
+* `/estimation/slam/state [fsd_common_msgs::CarState] → pose_estimate [sgtdv_msgs::CarPose]` 
+* `/estimation/velocity_estimation/velocity_estimation [fsd_common_msgs::CarStateDt] → /velocity_estimate [sgtdv_msgs::CarVel]`
 * `pathtracking_commands [sgtdv_msgs::Control] → sgt/control_command [fsd_common_msgs::ControlCommand]`
 
 ## Compilation
