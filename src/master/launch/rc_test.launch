@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+    <include file="$(find camera_cone_detection)/launch/camera_cone_detection.launch"/>
+    <!--<node pkg="visual_odometry" type="visual_odometry" name="base_link_to_odom" output="screen"/>-->
+    <node pkg="ptp_trajectory" type="ptp_trajectory" name="PTPtrajectory" output="screen"/>
+    <include file="$(find path_tracking)/launch/path_tracking_rc.launch"/>
+</launch>
