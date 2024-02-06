@@ -22,7 +22,9 @@ darknet
 documentation
 velodyne
 libdarknet.so
-src/camera_cone_detection/recordings/
-src/camera_cone_detection/Darknet_cone_detection/
+
+*.avi
+*.mp4
+*.svo
 *.bag
 data/
