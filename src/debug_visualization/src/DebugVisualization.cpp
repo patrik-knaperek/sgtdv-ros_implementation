@@ -7,13 +7,13 @@
 
 const DebugVisualization::NodeGeometry DebugVisualization::m_NODE_GEOMETRY[7] = 
 {
-    NodeGeometry(FPoint2D(0.f + X_GLOBAL_OFFSET, 0.f + Y_GLOBAL_OFFSET), 2.f, 1.f),       //camera
-    NodeGeometry(FPoint2D(0.f + X_GLOBAL_OFFSET, -2.f + Y_GLOBAL_OFFSET), 2.f, 1.f),      //lidar
-    NodeGeometry(FPoint2D(4.f + X_GLOBAL_OFFSET, -1.f + Y_GLOBAL_OFFSET), 2.f, 1.f),      //fusion
-    NodeGeometry(FPoint2D(4.f + X_GLOBAL_OFFSET, -3.f + Y_GLOBAL_OFFSET), 2.f, 1.f),      //slam
-    NodeGeometry(FPoint2D(4.f + X_GLOBAL_OFFSET, -5.f + Y_GLOBAL_OFFSET), 2.f, 1.f),      //pathPlanning
-    NodeGeometry(FPoint2D(4.f + X_GLOBAL_OFFSET, -7.f + Y_GLOBAL_OFFSET), 2.f, 1.f),      //pathTracking
-    NodeGeometry(FPoint2D(4.f + X_GLOBAL_OFFSET, -9.f + Y_GLOBAL_OFFSET), 2.f, 1.f)       //jetsonCanInterface
+    NodeGeometry(FPoint2D(0.f + X_GLOBAL_OFFSET, 0.f + Y_GLOBAL_OFFSET), 2.5f, 1.f),       //camera
+    NodeGeometry(FPoint2D(0.f + X_GLOBAL_OFFSET, -2.f + Y_GLOBAL_OFFSET), 2.5f, 1.f),      //lidar
+    NodeGeometry(FPoint2D(4.f + X_GLOBAL_OFFSET, -1.f + Y_GLOBAL_OFFSET), 2.5f, 1.f),      //fusion
+    NodeGeometry(FPoint2D(4.f + X_GLOBAL_OFFSET, -3.f + Y_GLOBAL_OFFSET), 2.5f, 1.f),      //slam
+    NodeGeometry(FPoint2D(4.f + X_GLOBAL_OFFSET, -5.f + Y_GLOBAL_OFFSET), 2.5f, 1.f),      //pathPlanning
+    NodeGeometry(FPoint2D(4.f + X_GLOBAL_OFFSET, -7.f + Y_GLOBAL_OFFSET), 2.5f, 1.f),      //pathTracking
+    NodeGeometry(FPoint2D(4.f + X_GLOBAL_OFFSET, -9.f + Y_GLOBAL_OFFSET), 2.5f, 1.f)       //jetsonCanInterface
 };
 
 DebugVisualization::NodeGeometry::NodeGeometry(const FPoint2D &position, float scaleX, float scaleY)
@@ -132,7 +132,7 @@ void DebugVisualization::InitNodeOutputs()
         m_nodeOutputs[i].color.g = 1.f;
         m_nodeOutputs[i].color.b = 1.f;
 
-        m_nodeOutputs[i].pose.position.x = m_NODE_GEOMETRY[i].position.GetPoint().x + 1.f;
+        m_nodeOutputs[i].pose.position.x = m_NODE_GEOMETRY[i].position.GetPoint().x + 0.5f;
         m_nodeOutputs[i].pose.position.y = m_NODE_GEOMETRY[i].position.GetPoint().y - 0.5f;
         m_nodeOutputs[i].pose.position.z = 1.f;
         m_nodeOutputs[i].text = "OUTPUT";
@@ -149,28 +149,26 @@ void DebugVisualization::Do(const sgtdv_msgs::DebugState::ConstPtr &msg, NODE_TY
     if (msg->workingState == 1)
     {        
         SetMarkerColorRed(type);
-        m_startTime[type] = std::chrono::steady_clock::now();
+        m_startTime[type] = msg->stamp;
         m_bStarted[type] = true;
     }
     else if (msg->workingState == 0)
     {
         std::stringstream ss;
         SetMarkerColorGreen(type);
+        auto workLoadTime = (ros::Duration(msg->stamp - m_startTime[type]).toNSec() / 1e6);
         
-        auto now = std::chrono::steady_clock::now();
-        auto workLoadTime = (std::chrono::duration_cast<std::chrono::milliseconds>(now - m_startTime[type])).count();
-
         if (!m_bStarted[type]) workLoadTime = 0;
 
-        ss << workLoadTime << " ms";
+        ss << std::fixed << std::setprecision(2) << workLoadTime << " ms";
         m_nodeWorkTime[type].text = ss.str();
         ss.str("");
 
-        auto timeSinceLastRun = (std::chrono::duration_cast<std::chrono::milliseconds>(now - m_endTime[type])).count();
+        auto timeSinceLastRun = (ros::Duration(msg->stamp - m_endTime[type]).toNSec() / 1e6);
         float seconds = timeSinceLastRun / 1000.f;
-        ss << 1.f / seconds << " Hz";
+        ss << std::fixed << std::setprecision(2) << 1.f / seconds << " Hz";
         m_nodeFrequency[type].text = ss.str();
-        m_endTime[type] = now;
+        m_endTime[type] = msg->stamp;
         ss.str("");
 
         switch(type)
@@ -180,6 +178,10 @@ void DebugVisualization::Do(const sgtdv_msgs::DebugState::ConstPtr &msg, NODE_TY
             case FUSION:
             case SLAM:
                 ss << msg->numOfCones << " cones";                
+                break;
+
+            case PATH_PLANNING:
+                ss << msg->numOfCones << " points";
                 break;
                 
             case PATH_TRACKING:
@@ -191,6 +193,7 @@ void DebugVisualization::Do(const sgtdv_msgs::DebugState::ConstPtr &msg, NODE_TY
         }
 
         m_nodeOutputs[type].text = ss.str();
+        m_bStarted[type] = false;
     }
     else
     {
@@ -205,7 +208,6 @@ void DebugVisualization::Do(const sgtdv_msgs::DebugState::ConstPtr &msg, NODE_TY
     m_nodeWorkTime[type].header.stamp = now;
     m_nodeFrequency[type].header.stamp = now;
     m_nodeOutputs[type].header.stamp = now;
-    m_bStarted[type] = false;
 }
 
 void DebugVisualization::DoCamera(const sgtdv_msgs::DebugState::ConstPtr &msg)
@@ -317,7 +319,7 @@ void DebugVisualization::InitNodeFrequency()
         m_nodeFrequency[i].pose.position = buff.GetPoint();
         m_nodeFrequency[i].pose.position.z = 1.f;
         m_nodeFrequency[i].text = "0 Hz";
-        m_endTime[i] = std::chrono::steady_clock::now();
+        m_endTime[i] = ros::Time::now();
     }
 }
 
@@ -350,7 +352,7 @@ void DebugVisualization::InitNodeWorkTime()
         m_nodeWorkTime[i].pose.position = buff.GetPoint();
         m_nodeWorkTime[i].pose.position.z = 1.f;
         m_nodeWorkTime[i].text = "0 ms";
-        m_startTime[i] = std::chrono::steady_clock::now();
+        m_startTime[i] = ros::Time::now();
     }
 }
 

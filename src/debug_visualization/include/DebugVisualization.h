@@ -67,13 +67,6 @@ public:
     void DoPathTracking(const sgtdv_msgs::DebugState::ConstPtr &msg);
     void DoJetsonCANInterface(const sgtdv_msgs::DebugState::ConstPtr &msg);
    
-    void PublishAllNodes();
-    void PublishAllConnectionLines();
-    void PublishAllNames();
-    void PublishAllWorkTimes();
-    void PublishAllFrequencies();
-    void PublishAllOutputs();
-    void PublishEverything();
     void PublishEverythingAsArray();
 
 private:
@@ -87,8 +80,8 @@ private:
     visualization_msgs::MarkerArray m_markerArray;
     bool m_bStarted[NUM_OF_NODES] = { false, false, false, false, false, false, false };
 
-    std::chrono::time_point<std::chrono::steady_clock> m_startTime[NUM_OF_NODES];
-    std::chrono::time_point<std::chrono::steady_clock> m_endTime[NUM_OF_NODES];
+    ros::Time m_startTime[NUM_OF_NODES];
+    ros::Time m_endTime[NUM_OF_NODES];
 
     void Do(const sgtdv_msgs::DebugState::ConstPtr &msg, NODE_TYPE type);
     void InitMarkerArray();

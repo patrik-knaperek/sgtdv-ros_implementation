@@ -20,6 +20,7 @@ void SimInterface::DoLidar(const sensor_msgs::PointCloud2::ConstPtr &msg)
 {   
 #ifdef SGT_DEBUG_STATE
     sgtdv_msgs::DebugState state;
+    state.stamp = ros::Time::now();
     state.workingState = 1;
     m_visLidarDebugPublisher.publish(state);
 #endif    
@@ -45,6 +46,7 @@ void SimInterface::DoLidar(const sensor_msgs::PointCloud2::ConstPtr &msg)
     m_lidarPublisher.publish(lidarCones);
 
 #ifdef SGT_DEBUG_STATE
+    state.stamp = ros::Time::now();
     state.numOfCones = lidarCones->points.size();
     state.workingState = 0;
 	m_visLidarDebugPublisher.publish(state);
@@ -55,6 +57,7 @@ void SimInterface::DoCamera(const sensor_msgs::PointCloud2::ConstPtr &msg)
 {
 #ifdef SGT_DEBUG_STATE
     sgtdv_msgs::DebugState state;
+    state.stamp = ros::Time::now();
     state.workingState = 1;
     m_visCameraDebugPublisher.publish(state);
 #endif
@@ -88,6 +91,7 @@ void SimInterface::DoCamera(const sensor_msgs::PointCloud2::ConstPtr &msg)
     m_cameraPublisher.publish(cameraCones);
 
 #ifdef SGT_DEBUG_STATE
+    state.stamp = ros::Time::now();
     state.numOfCones = cameraCones->cones.size();
     state.workingState = 0;
 	m_visCameraDebugPublisher.publish(state);
