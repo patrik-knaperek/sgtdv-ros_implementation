@@ -1,9 +1,0 @@
-<launch>
-  <rosparam command="load" file="$(find path_planning)/params/path_planning_rc.yaml"/>
-  <node
-    pkg="path_planning"
-    type="path_planning"
-    name="pathPlanning" 
-    output="screen"
-  />
-</launch> 

@@ -1,2 +1,0 @@
-Point2DArr lidarCones
-ConeArr cameraCones

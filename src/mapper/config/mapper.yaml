@@ -1,3 +1,0 @@
-cumulated_cone_measurements: true
-interface: fssim                      # fssim or sgt_dv
-euclid_threshold: 0.7
