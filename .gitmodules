@@ -1,0 +1,54 @@
+[submodule "src/calibration"]
+	path = src/calibration
+	url = git@gitlab.com:sgt-driverless/submodules_ros/calibration.git
+[submodule "src/camera_cone_detection"]
+	path = src/camera_cone_detection
+	url = git@gitlab.com:sgt-driverless/submodules_ros/camera_cone_detection.git
+[submodule "src/debug_visualization"]
+	path = src/debug_visualization
+	url = git@gitlab.com:sgt-driverless/submodules_ros/debug_visualization.git
+[submodule "src/fusion"]
+	path = src/fusion
+	url = git@gitlab.com:sgt-driverless/submodules_ros/fusion.git
+[submodule "src/jetson_can_interface"]
+	path = src/jetson_can_interface
+	url = git@gitlab.com:sgt-driverless/submodules_ros/jetson_can_interface.git
+[submodule "src/lidar_cone_detection"]
+	path = src/lidar_cone_detection
+	url = git@gitlab.com:sgt-driverless/submodules_ros/lidar_cone_detection.git
+[submodule "src/mapper"]
+	path = src/mapper
+	url = git@gitlab.com:sgt-driverless/submodules_ros/mapper.git
+[submodule "src/master"]
+	path = src/master
+	url = git@gitlab.com:sgt-driverless/submodules_ros/master.git
+[submodule "src/path_planning"]
+	path = src/path_planning
+	url = git@gitlab.com:sgt-driverless/submodules_ros/path_planning.git
+[submodule "src/path_tracking"]
+	path = src/path_tracking
+	url = git@gitlab.com:sgt-driverless/submodules_ros/path_tracking.git
+[submodule "src/pose_estimate"]
+	path = src/pose_estimate
+	url = git@gitlab.com:sgt-driverless/submodules_ros/pose_estimate.git
+[submodule "src/ptp_trajectory"]
+	path = src/ptp_trajectory
+	url = git@gitlab.com:sgt-driverless/submodules_ros/ptp_trajectory.git
+[submodule "src/robot_localization"]
+	path = src/robot_localization
+	url = git@gitlab.com:sgt-driverless/submodules_ros/robot_localization.git
+[submodule "src/sgtdv_msgs"]
+	path = src/sgtdv_msgs
+	url = git@gitlab.com:sgt-driverless/submodules_ros/sgtdv_msgs.git
+[submodule "src/simulation_interface"]
+	path = src/simulation_interface
+	url = git@gitlab.com:sgt-driverless/submodules_ros/simulation_interface.git
+[submodule "src/slam"]
+	path = src/slam
+	url = git@gitlab.com:sgt-driverless/submodules_ros/slam.git
+[submodule "src/visual_odometry"]
+	path = src/visual_odometry
+	url = git@gitlab.com:sgt-driverless/submodules_ros/visual_odometry.git
+[submodule "src/visualizator"]
+	path = src/visualizator
+	url = git@gitlab.com:sgt-driverless/submodules_ros/visualizator.git
