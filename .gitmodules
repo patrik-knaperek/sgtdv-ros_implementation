@@ -1,14 +1,10 @@
-[submodule "calibration"]
-	path = src/calibration
+[submodule "measurement_models"]
+	path = src/measurement_models
 	url = git@gitlab.com:sgt-driverless/submodules_ros/calibration.git
 	branch = main
-[submodule "camera_cone_detection"]
-	path = src/camera_cone_detection
+[submodule "camera_driver"]
+	path = src/camera_driver
 	url = git@gitlab.com:sgt-driverless/submodules_ros/camera_cone_detection.git
-        branch = main 
-[submodule "debug_visualization"]
-	path = src/debug_visualization
-	url = git@gitlab.com:sgt-driverless/submodules_ros/debug_visualization.git
         branch = main 
 [submodule "fusion"]
 	path = src/fusion
@@ -38,8 +34,8 @@
 	path = src/path_tracking
 	url = git@gitlab.com:sgt-driverless/submodules_ros/path_tracking.git
         branch = main 
-[submodule "pose_estimate"]
-	path = src/pose_estimate
+[submodule "odometry_interface"]
+	path = src/odometry_interface
 	url = git@gitlab.com:sgt-driverless/submodules_ros/pose_estimate.git
         branch = main 
 [submodule "ptp_trajectory"]
@@ -49,7 +45,7 @@
 [submodule "robot_localization"]
 	path = src/robot_localization
 	url = git@gitlab.com:sgt-driverless/submodules_ros/robot_localization.git
-        branch = main 
+	branch = main
 [submodule "sgtdv_msgs"]
 	path = src/sgtdv_msgs
 	url = git@gitlab.com:sgt-driverless/submodules_ros/sgtdv_msgs.git
@@ -66,7 +62,7 @@
 	path = src/visual_odometry
 	url = git@gitlab.com:sgt-driverless/submodules_ros/visual_odometry.git
         branch = main 
-[submodule "visualizator"]
-	path = src/visualizator
+[submodule "visualization"]
+	path = src/visualization
 	url = git@gitlab.com:sgt-driverless/submodules_ros/visualizator.git
         branch = main 
