@@ -47,7 +47,7 @@ The whole workflow can be run and tested in these modes:
 
 **Supporting**
 * [`jetson_can_interface`](src/jetson_can_interface/README.md)
-* [`vesc_interface`](src/vesc_interface/README.md)
+* [`vesc_interface`](src/racecar_interface/vesc_interface/README.md)
 * [`mapper`](src/mapper/README.md)
 * [`measurement_models`](src/measurement_models/README.md)
 * [`odometry_interface`](src/odometry_interface/README.md)
@@ -64,6 +64,8 @@ The whole workflow can be run and tested in these modes:
 **External**
 * [`robot_localization`](src/robot_localization/README.md)
 * [`velodyne`](src/velodyne/README.md)
+* [`xsens_driver](src/xsens_driver/README.md)
+* [`vesc](src/racecar_interface/vesc/vesc/package.xml)
 
 ## Installation
 

@@ -19,8 +19,6 @@ logs
 devel
 build
 darknet
-documentation
-velodyne
 libdarknet.so
 
 *.avi

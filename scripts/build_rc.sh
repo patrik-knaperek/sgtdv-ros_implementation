@@ -13,6 +13,8 @@ catkin build \
     odometry_interface \
     ptp_trajectory \
     visual_odometry \
+    vesc_interface \
+    vesc \
     -DCMAKE_BUILD_TYPE=Release
 
 

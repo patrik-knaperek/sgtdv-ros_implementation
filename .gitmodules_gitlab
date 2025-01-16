@@ -1,0 +1,68 @@
+[submodule "measurement_models"]
+	path = src/measurement_models
+	url = git@gitlab.com:sgt-driverless/submodules_ros/calibration.git
+	branch = main
+[submodule "camera_driver"]
+	path = src/camera_driver
+	url = git@gitlab.com:sgt-driverless/submodules_ros/camera_cone_detection.git
+        branch = main 
+[submodule "fusion"]
+	path = src/fusion
+	url = git@gitlab.com:sgt-driverless/submodules_ros/fusion.git
+        branch = main 
+[submodule "jetson_can_interface"]
+	path = src/jetson_can_interface
+	url = git@gitlab.com:sgt-driverless/submodules_ros/jetson_can_interface.git
+        branch = main 
+[submodule "lidar_cone_detection"]
+	path = src/lidar_cone_detection
+	url = git@gitlab.com:sgt-driverless/submodules_ros/lidar_cone_detection.git
+        branch = main 
+[submodule "mapper"]
+	path = src/mapper
+	url = git@gitlab.com:sgt-driverless/submodules_ros/mapper.git
+        branch = main 
+[submodule "master"]
+	path = src/master
+	url = git@gitlab.com:sgt-driverless/submodules_ros/master.git
+        branch = main 
+[submodule "path_planning"]
+	path = src/path_planning
+	url = git@gitlab.com:sgt-driverless/submodules_ros/path_planning.git
+        branch = main 
+[submodule "path_tracking"]
+	path = src/path_tracking
+	url = git@gitlab.com:sgt-driverless/submodules_ros/path_tracking.git
+        branch = main 
+[submodule "odometry_interface"]
+	path = src/odometry_interface
+	url = git@gitlab.com:sgt-driverless/submodules_ros/pose_estimate.git
+        branch = main 
+[submodule "ptp_trajectory"]
+	path = src/ptp_trajectory
+	url = git@gitlab.com:sgt-driverless/submodules_ros/ptp_trajectory.git
+        branch = main 
+[submodule "robot_localization"]
+	path = src/robot_localization
+	url = git@gitlab.com:sgt-driverless/submodules_ros/robot_localization.git
+	branch = main
+[submodule "sgtdv_msgs"]
+	path = src/sgtdv_msgs
+	url = git@gitlab.com:sgt-driverless/submodules_ros/sgtdv_msgs.git
+        branch = main 
+[submodule "simulation_interface"]
+	path = src/simulation_interface
+	url = git@gitlab.com:sgt-driverless/submodules_ros/simulation_interface.git
+        branch = main 
+[submodule "slam"]
+	path = src/slam
+	url = git@gitlab.com:sgt-driverless/submodules_ros/slam.git
+        branch = main 
+[submodule "visual_odometry"]
+	path = src/visual_odometry
+	url = git@gitlab.com:sgt-driverless/submodules_ros/visual_odometry.git
+        branch = main 
+[submodule "visualization"]
+	path = src/visualization
+	url = git@gitlab.com:sgt-driverless/submodules_ros/visualizator.git
+        branch = main 
