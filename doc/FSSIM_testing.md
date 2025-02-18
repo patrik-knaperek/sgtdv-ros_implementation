@@ -11,7 +11,7 @@ ___
 Particular nodes, groups of nodes or whole AS can be tested with FS Simulator by AMZ-Driverless connected through packages from `simulation_interface` submodule.
 
 <p align="center">
-  <img src="./DV_architecture-ROS_fssim_setup.svg" width="800">
+  <img src="./DV_architecture-ROS_fssim_setup.svg" width="900">
 </p>
 <figcaption align = "center">ROS nodes and topics - FSSIM setup</figcaption>
 

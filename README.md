@@ -20,7 +20,7 @@ The whole workflow can be run and tested in these modes:
 * [**FSSIM**](./doc/FSSIM_testing.md) - running all or particular nodes with [FS Simulator](https://gitlab.com/sgt-driverless/simulation/fsd_skeleton). Can be done on any PC. In this case, the simulator provides both the complete physical layer of the autonomous car and the autonomous system workflow, which, however, can by connected to / replaced by our nodes to test the algorithms.  
 
 <p align="center">
-  <img src="./doc/DV_architecture-ROS_fssim_setup.svg" width="800">
+  <img src="./doc/DV_architecture-ROS_fssim_setup.svg" width="900">
 </p>
 <figcaption align = "center">ROS nodes and topics - FSSIM setup</figcaption>
 

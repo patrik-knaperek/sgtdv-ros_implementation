@@ -80,6 +80,7 @@ my_module
 │   my_module.h
 ├── src
 │   my_module_node.src
+│   my_module_ros.src
 │   my_module.src
 ├── params
 │   my_module.yaml
@@ -103,28 +104,35 @@ my_module
 ```
 
 * **include** : one header file for each class defined in the package
-* **src** : one `*_node.src` file containing (preferably) only `main()` function, one `*.src` implementation file for each class
-* **params** : one or more configuration files allowing
-  * changing program parameters without need to recompile
+* **src** : 
+  - `*_node.cpp` file containing (preferably) only `main()` function with either a `ros::spin()` call (for modules activated by callbacks only) or a while loop with defined `ros::Rate()` and `ros::Rate::spinOnce()` call (for modules running at desired frequency), 
+  - `*_ros.cpp`file that handles ROS interface of the module (topics, services, parameters)
+  - `*.cpp` implementation file(s) for each other class
+* params : one or more configuration files allowing
+  * changing program parameters without a need to recompile
   * launching under different configuration setups
-* <b>*launch*</b> : one or more launch files allowing for different launch conditions
-* <b>*msg*</b> custom message definition - AVOID message definition in other packages than `sgtdv_msgs`
-* <b>*srv*</b> : custom service definition - AVOID service definition in other packages than `sgtdv_msgs`
-* <b>*data*</b> : custom logs, CSV files, etc.
-* <b>*doc*</b> : support documentation files for README (e. g. schemes, chart flows...)
-* <b>*bag*</b> : rosbags for offline launch
-* <b>*rviz*</b> : RViz config files
-* [`CMakeLists.txt`](https://wiki.ros.org/catkin/CMakeLists.txt) : build input file
-* [`package.xml`](https://wiki.ros.org/catkin/package.xml) : package manifest file
-* README.md : describe the package functionality in a way, that no one really needs to read the code to understand it, especially:
+* launch : one or more launch files allowing for different launch conditions
+* *msg* : custom message definition - AVOID message definition in other packages than `sgtdv_msgs`
+* *srv* : custom service definition - AVOID service definition in other packages than `sgtdv_msgs`
+* data : custom logs, CSV files, etc.
+* doc : support documentation files for README (e. g. schemes, chart flows...)
+* bag : rosbags for offline launch
+* rviz : RViz config files
+* [**CMakeLists.txt**](https://wiki.ros.org/catkin/CMakeLists.txt) : build input file
+* [**package.xml**](https://wiki.ros.org/catkin/package.xml) : package manifest file
+* **README.md** : describe the package functionality in a way, that no one really needs to read the code to understand it, especially:
   - package name
   - authors and short main objective (1 sentence)
-  - further brief explanation of the package purpose
-  - ROS interface description
-  - build and setup manual
+  - package overview
+    - further brief explanation of the package purpose and functionality
+    - ROS interface description
+    - reference to related packages
+  - installation guide (in case of external libraries requirements)
+  - how to compile
+  - how to launch
   - configuration options description
-  - launch manual
   - workflow diagram
+  - any references related to the implementation methods
 
 ## Launchfile tips
 
