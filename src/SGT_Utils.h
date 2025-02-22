@@ -128,7 +128,7 @@ class Utils
     }
     catch (tf::TransformException &e)
     {
-      std::cout << e.what();
+      ROS_WARN(e.what());
     }
     return coords_target_frame;
   }
