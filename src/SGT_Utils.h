@@ -9,10 +9,13 @@
 #include <geometry_msgs/PointStamped.h>
 #include <tf/transform_listener.h>
 
+#define deg2rad(x) (x*M_PI/180.f)
+#define rad2deg(x) (x*180.f/M_PI)
+
 class Utils
 {
-  Utils() = default;
-  ~Utils() = default;
+  // Utils() = default;
+  // ~Utils() = default;
 
   public:
   /**
@@ -131,5 +134,40 @@ class Utils
       std::cout << e.what();
     }
     return coords_target_frame;
+  }
+
+  /// @brief Finds an index of the closest trajectory point to the reference position
+  /// @param trajectory - array of the trajecotry points
+  /// @param pos - reference position
+  /// @return index of the trajectory point in the array
+
+  
+  /// @brief Finds an index of the closest point of a container to the reference position
+  /// @tparam Container group of a type with fields "x" and "y"
+  /// @tparam EigenVector 2-rows vector
+  /// @tparam PointGetter pointer to a function returning 2-rows Eigen::Vector
+  /// @param pos reference position
+  /// @param set_of_points set of position points
+  /// @param getPoint specifies a method to obtain a point of Eigen::Vector type from the container
+  /// @return container itertor of the closest element
+  template <typename Container, typename EigenVector, typename PointGetter>
+  static size_t findClosestPointIdx(const EigenVector& pos, const Container &set_of_points, PointGetter getPoint)
+  {
+    static_assert(EigenVector::RowsAtCompileTime == 2, "findClosestPointIdx(): EigenVector must have 2 rows");
+
+    const auto set_of_points_it = std::min_element(set_of_points.begin(), set_of_points.end(), 
+      [&](const auto &a, const auto &b)
+      {
+        auto pa = getPoint(a);
+        auto pb = getPoint(b);
+
+        const double da = std::hypot(pos[0] - pa[0],
+                                    pos[1] - pa[1]);
+        const double db = std::hypot(pos[0] - pb[0],
+                                    pos[1] - pb[1]);
+
+        return da < db;
+      });
+    return std::distance(set_of_points.begin(), set_of_points_it);
   }
 };
