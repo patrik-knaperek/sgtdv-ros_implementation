@@ -134,7 +134,7 @@ class Utils
       std::cout << e.what();
     }
     return coords_target_frame;
-  }
+  };
 
   /// @brief Finds an index of the closest trajectory point to the reference position
   /// @param trajectory - array of the trajecotry points
@@ -169,5 +169,16 @@ class Utils
         return da < db;
       });
     return std::distance(set_of_points.begin(), set_of_points_it);
-  }
+  };
+
+  /// @brief Saturate value from min to max
+  /// @tparam T value type
+  /// @param val input value
+  /// @param min minimum value
+  /// @param max maximum value
+  /// @return min <= val <= max
+  template <typename T> static T saturation(const T val, const T min, const T max)
+  {
+    return std::max(min, std::min(max, val));
+  };
 };
